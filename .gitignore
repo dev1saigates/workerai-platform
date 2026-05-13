@@ -24,3 +24,5 @@ pnpm-debug.log*
 
 # Vercel
 .vercel
+workerai-platform/docs/ui-reference/
+

@@ -2,9 +2,15 @@ packages:
   - "apps/*"
   - "packages/*"
 
-# ⚠️ SECURITY: Only these packages are allowed to run postinstall scripts.
-# Adding a package here means you trust it to run code on your machine during install.
-# Review each addition carefully before merging.
+# ⚠️ SECURITY: Only trusted dependencies may run install-time scripts (native binaries, etc.).
+# approve-builds with no selection set these to false and blocked installs — use true after you review the package.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+
+# Kept for clarity / older pnpm tooling; primary control in this repo is allowBuilds above.
 onlyBuiltDependencies:
+  - esbuild
   - sharp
   - unrs-resolver
