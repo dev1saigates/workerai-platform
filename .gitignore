@@ -1,0 +1,26 @@
+# Dependencies (monorepo root + packages — never commit install output)
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+.turbo/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Debug / OS
+.DS_Store
+*.pem
+npm-debug.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Vercel
+.vercel

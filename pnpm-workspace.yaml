@@ -1,0 +1,10 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# ⚠️ SECURITY: Only these packages are allowed to run postinstall scripts.
+# Adding a package here means you trust it to run code on your machine during install.
+# Review each addition carefully before merging.
+onlyBuiltDependencies:
+  - sharp
+  - unrs-resolver
