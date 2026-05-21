@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { WorkflowsContent } from "./workflows-content";
 
-export const metadata: Metadata = { title: "Workflows | WorkerAI" };
+export const metadata: Metadata = {
+  title: "Workflows | WorkerAI",
+  description: "Automate multi-step processes across your AI workers",
+};
 
 export default function WorkflowsPage() {
-  return <ComingSoon title="Workflows" />;
+  return <WorkflowsContent />;
 }

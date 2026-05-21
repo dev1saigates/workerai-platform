@@ -14,7 +14,7 @@
 | Phase | Progress | Status |
 |-------|----------|--------|
 | **Phase 1** — Setup & monorepo | `████████░░` **80%** (8/10) | 🟡 In progress |
-| **Phase 2** — Frontend UI | `████░░░░░░` **38%** (5/13 screens) | 🟡 In progress |
+| **Phase 2** — Frontend UI | `██████░░░░` **62%** (8/13 screens) | 🟡 In progress |
 | **Phase 3** — Database (PostgreSQL) | `░░░░░░░░░░` **0%** (0/10) | ⬜ Not started |
 | **Phase 4** — Backend API | `░░░░░░░░░░` **0%** (0/17) | ⬜ Not started |
 | **Phase 5** — AI pipeline (vLLM) | `░░░░░░░░░░` **0%** (0/6) | ⬜ Not started |
@@ -51,9 +51,9 @@
 | Command Centre | `dashboard.png` | 5/7 | 🟡 |
 | Approvals | `approvals.png` | 6/9 | 🟡 |
 | AI Workers | `ai_workers.png` | 5/9 | 🟡 |
-| Task log | `task-log.png` | 0/4 | ⬜ |
-| Workflows | `workflows.png` | 0/3 | ⬜ |
-| Claw — Ingestion | `claw_ingestion.png` | 0/3 | ⬜ |
+| Task log | `task-log.png` | 3/4 | 🟡 |
+| Workflows | `workflows.png` | 3/4 | 🟡 |
+| Claw — Ingestion | `claw_ingestion.png` | 3/4 | 🟡 |
 | Knowledge hub | `knowledge_hub.png` | 0/3 | ⬜ |
 | Reports | `reports.png` | 0/3 | ⬜ |
 | Team | `team.png` | 0/3 | ⬜ |
@@ -143,26 +143,29 @@
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | Heading + filters |
-| ⬜ | Task list + status badges |
-| ⬜ | Pagination |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | Heading + AI Generate / Create Task + filter pills |
+| ✅ | Task list + priority + status badges |
+| ⬜ | Pagination (when API wired) |
 
 #### Workflows
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | Heading + New Workflow |
-| ⬜ | Workflow cards + trigger types |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | Heading + New Workflow + subtitle |
+| ✅ | Template cards (3) + Your workflows list |
+| ✅ | Trigger labels (EMAIL / MANUAL / CRM) + active badge + play/pause |
+| ⬜ | Final spacing / colours vs reference |
 
 #### Claw — Ingestion
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | Heading + Add Source |
-| ⬜ | Source list + recent ingested items |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | Heading + stats + channel grid + Test Ingest |
+| ✅ | Webhook URL + Copy + recent ingestion list |
+| ⬜ | Final spacing / colours vs reference |
 
 #### Knowledge hub
 

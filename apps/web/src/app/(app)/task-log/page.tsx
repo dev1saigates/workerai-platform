@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { TaskLogContent } from "./task-log-content";
 
 export const metadata: Metadata = { title: "Task Log | WorkerAI" };
 
 export default function TaskLogPage() {
-  return <ComingSoon title="Task Log" />;
+  return <TaskLogContent />;
 }

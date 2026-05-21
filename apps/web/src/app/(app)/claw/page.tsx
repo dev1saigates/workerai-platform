@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { ClawContent } from "./claw-content";
 
 export const metadata: Metadata = { title: "Claw — Ingestion | WorkerAI" };
 
 export default function ClawPage() {
-  return <ComingSoon title="Claw — Ingestion" />;
+  return <ClawContent />;
 }

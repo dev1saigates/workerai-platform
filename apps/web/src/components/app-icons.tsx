@@ -251,3 +251,37 @@ export function IconPaperclip() {
     </svg>
   );
 }
+
+export function IconPlay() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M8 5v14l11-7L8 5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function IconPause() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M10 5h2v14h-2V5ZM14 5h2v14h-2V5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function IconSparkles() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 3 13.5 8.5 19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M19 14l1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconCopy() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
