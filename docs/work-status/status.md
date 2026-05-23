@@ -14,7 +14,7 @@
 | Phase | Progress | Status |
 |-------|----------|--------|
 | **Phase 1** — Setup & monorepo | `████████░░` **80%** (8/10) | 🟡 In progress |
-| **Phase 2** — Frontend UI | `██████░░░░` **62%** (8/13 screens) | 🟡 In progress |
+| **Phase 2** — Frontend UI | `████████░░` **77%** (10/13 screens) | 🟡 In progress |
 | **Phase 3** — Database (PostgreSQL) | `░░░░░░░░░░` **0%** (0/10) | ⬜ Not started |
 | **Phase 4** — Backend API | `░░░░░░░░░░` **0%** (0/17) | ⬜ Not started |
 | **Phase 5** — AI pipeline (vLLM) | `░░░░░░░░░░` **0%** (0/6) | ⬜ Not started |
@@ -54,8 +54,8 @@
 | Task log | `task-log.png` | 3/4 | 🟡 |
 | Workflows | `workflows.png` | 3/4 | 🟡 |
 | Claw — Ingestion | `claw_ingestion.png` | 3/4 | 🟡 |
-| Knowledge hub | `knowledge_hub.png` | 0/3 | ⬜ |
-| Reports | `reports.png` | 0/3 | ⬜ |
+| Knowledge hub | `knowledge_hub.png` | 3/4 | 🟡 |
+| Reports | `reports.png` | 3/4 | 🟡 |
 | Team | `team.png` | 0/3 | ⬜ |
 | Settings | `settings.png` | 0/2 | ⬜ |
 
@@ -171,15 +171,19 @@
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | Upload + document list + search |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | Upload + document list + search |
+| ✅ | Stats row + status badges (indexed / processing / failed) |
+| ⬜ | Final spacing / colours vs reference |
 
 #### Reports
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | KPI tiles + charts + date range |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | KPI tiles + charts + date range |
+| ✅ | Top workers table |
+| ⬜ | Final spacing / colours vs reference |
 
 #### Team
 
