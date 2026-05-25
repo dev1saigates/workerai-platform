@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AddEntryModal } from "@/components/add-entry-modal";
 import { IconSparkles } from "@/components/app-icons";
 import {
   FILTER_LABELS,
@@ -19,27 +20,51 @@ const FILTERS: TaskFilter[] = [
   "auto_executed",
 ];
 
+const CREATE_TASK_FIELDS = [
+  { name: "title", label: "Task title", required: true },
+  { name: "worker", label: "AI worker", required: true },
+  { name: "type", label: "Type", placeholder: "email draft, social…" },
+  {
+    name: "priority",
+    label: "Priority",
+    type: "select" as const,
+    options: [
+      { value: "low", label: "Low" },
+      { value: "medium", label: "Medium" },
+      { value: "high", label: "High" },
+    ],
+  },
+];
+
+const AI_GENERATE_FIELDS = [
+  { name: "prompt", label: "What should the AI draft?", type: "textarea" as const, required: true },
+  { name: "worker", label: "AI worker", required: true },
+];
+
 export function TaskLogContent() {
   const [filter, setFilter] = useState<TaskFilter>("all");
+  const [tasks, setTasks] = useState(TASK_LOG_ENTRIES);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [generateOpen, setGenerateOpen] = useState(false);
 
   const counts = useMemo(() => {
     const base: Record<TaskFilter, number> = {
-      all: TASK_LOG_ENTRIES.length,
+      all: tasks.length,
       pending: 0,
       approved: 0,
       rejected: 0,
       auto_executed: 0,
     };
-    for (const t of TASK_LOG_ENTRIES) {
+    for (const t of tasks) {
       base[t.status] += 1;
     }
     return base;
-  }, []);
+  }, [tasks]);
 
   const visible = useMemo(() => {
-    if (filter === "all") return TASK_LOG_ENTRIES;
-    return TASK_LOG_ENTRIES.filter((t) => t.status === filter);
-  }, [filter]);
+    if (filter === "all") return tasks;
+    return tasks.filter((t) => t.status === filter);
+  }, [filter, tasks]);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -49,12 +74,13 @@ export function TaskLogContent() {
             Task Log
           </h2>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            {TASK_LOG_ENTRIES.length} recent tasks
+            {tasks.length} recent tasks
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
           <button
             type="button"
+            onClick={() => setGenerateOpen(true)}
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-white/15 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:bg-white/[0.08]"
           >
             <IconSparkles />
@@ -62,6 +88,7 @@ export function TaskLogContent() {
           </button>
           <button
             type="button"
+            onClick={() => setCreateOpen(true)}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
           >
             <span className="text-lg leading-none">+</span>
@@ -69,6 +96,52 @@ export function TaskLogContent() {
           </button>
         </div>
       </div>
+
+      <AddEntryModal
+        open={generateOpen}
+        onClose={() => setGenerateOpen(false)}
+        title="AI Generate"
+        subtitle="Queues a demo task (vLLM on DGX when API is wired)."
+        fields={AI_GENERATE_FIELDS}
+        submitLabel="Generate"
+        onSubmit={(v) => {
+          setTasks((prev) => [
+            {
+              id: `t-${Date.now()}`,
+              icon: "✨",
+              title: v.prompt.slice(0, 80),
+              worker: v.worker.trim(),
+              type: "ai draft",
+              ago: "just now",
+              priority: "medium",
+              status: "pending",
+            },
+            ...prev,
+          ]);
+        }}
+      />
+      <AddEntryModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        title="Create task"
+        fields={CREATE_TASK_FIELDS}
+        submitLabel="Create task"
+        onSubmit={(v) => {
+          setTasks((prev) => [
+            {
+              id: `t-${Date.now()}`,
+              icon: "📌",
+              title: v.title.trim(),
+              worker: v.worker.trim(),
+              type: v.type.trim() || "manual",
+              ago: "just now",
+              priority: (v.priority || "medium") as TaskPriority,
+              status: "pending",
+            },
+            ...prev,
+          ]);
+        }}
+      />
 
       <div className="mb-6 flex flex-wrap gap-2">
         {FILTERS.map((key) => (

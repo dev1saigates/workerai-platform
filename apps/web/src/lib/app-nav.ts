@@ -8,7 +8,7 @@ export const PAGE_TITLES: Record<string, string> = {
   "/workflows": "Workflows",
   "/claw": "Claw — Ingestion",
   "/task-log": "Task Log",
-  "/reports": "Reports",
+  "/reports": "Reports & Analytics",
   "/team": "Team",
   "/knowledge": "Knowledge Hub",
   "/settings": "Settings",

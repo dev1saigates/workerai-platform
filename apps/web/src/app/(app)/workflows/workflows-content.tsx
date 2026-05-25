@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AddEntryModal } from "@/components/add-entry-modal";
 import { IconPause, IconPlay } from "@/components/app-icons";
 import {
   TRIGGER_LABELS,
@@ -10,8 +11,25 @@ import {
   type WorkflowTrigger,
 } from "@/lib/workflows-data";
 
+const NEW_WORKFLOW_FIELDS = [
+  { name: "name", label: "Workflow name", required: true },
+  { name: "steps", label: "Steps (summary)", required: true, placeholder: "Step 1 → Step 2 → …" },
+  {
+    name: "trigger",
+    label: "Trigger",
+    type: "select" as const,
+    required: true,
+    options: [
+      { value: "email", label: "Email" },
+      { value: "manual", label: "Manual" },
+      { value: "crm", label: "CRM" },
+    ],
+  },
+];
+
 export function WorkflowsContent() {
   const [workflows, setWorkflows] = useState(USER_WORKFLOWS);
+  const [addOpen, setAddOpen] = useState(false);
 
   function toggleStatus(id: string) {
     setWorkflows((prev) =>
@@ -36,12 +54,36 @@ export function WorkflowsContent() {
         </div>
         <button
           type="button"
+          onClick={() => setAddOpen(true)}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
         >
           <span className="text-lg leading-none">+</span>
           New Workflow
         </button>
       </div>
+
+      <AddEntryModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        title="New workflow"
+        fields={NEW_WORKFLOW_FIELDS}
+        submitLabel="Create workflow"
+        onSubmit={(v) => {
+          setWorkflows((prev) => [
+            ...prev,
+            {
+              id: `wf-${Date.now()}`,
+              trigger: (v.trigger || "manual") as WorkflowTrigger,
+              name: v.name.trim(),
+              steps: v.steps.trim(),
+              runs: 0,
+              successRate: 100,
+              createdBy: "Sarah Wilson",
+              status: "paused",
+            },
+          ]);
+        }}
+      />
 
       <section className="mb-10">
         <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">

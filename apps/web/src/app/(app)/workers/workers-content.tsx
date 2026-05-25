@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AddEntryModal } from "@/components/add-entry-modal";
 import { IconGear, IconRobotSm } from "@/components/app-icons";
 import {
   ONBOARDING_EVENT,
@@ -10,7 +11,18 @@ import {
   type Worker,
 } from "@/lib/workers-data";
 
+const ADD_WORKER_FIELDS = [
+  { name: "name", label: "Worker name", required: true, placeholder: "e.g. Sales Assistant" },
+  { name: "role", label: "Role", required: true, placeholder: "e.g. Sales" },
+  { name: "tone", label: "Tone", placeholder: "Professional, friendly…" },
+  { name: "description", label: "Description", type: "textarea" as const },
+];
+
 export function WorkersContent() {
+  const [extraWorkers, setExtraWorkers] = useState<Worker[]>([]);
+  const [addOpen, setAddOpen] = useState(false);
+  const workers = useMemo(() => [...WORKERS, ...extraWorkers], [extraWorkers]);
+
   // Keep a local "overrides" map so the badge re-renders when the user
   // finishes (or resets) onboarding inside the chat page.
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
@@ -37,13 +49,13 @@ export function WorkersContent() {
             AI Workers
           </h2>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            {WORKERS.length} workers in your workspace · click any to open a
+            {workers.length} workers in your workspace · click any to open a
             chat
           </p>
         </div>
         <button
           type="button"
-          onClick={() => alert("Wire to create-worker flow later")}
+          onClick={() => setAddOpen(true)}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
         >
           <span className="text-lg leading-none">+</span>
@@ -51,8 +63,37 @@ export function WorkersContent() {
         </button>
       </div>
 
+      <AddEntryModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        title="Add AI worker"
+        subtitle="Creates a demo worker in this browser session (API later)."
+        fields={ADD_WORKER_FIELDS}
+        submitLabel="Create worker"
+        onSubmit={(v) => {
+          const name = v.name.trim();
+          const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "new-worker";
+          setExtraWorkers((prev) => [
+            ...prev,
+            {
+              id: `local-${Date.now()}`,
+              slug,
+              emoji: "🤖",
+              name,
+              role: v.role.trim() || "Assistant",
+              description: v.description.trim() || "New worker persona.",
+              active: true,
+              tasks: 0,
+              approvalRate: 0,
+              autoExec: "Never",
+              onboarded: false,
+            },
+          ]);
+        }}
+      />
+
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {WORKERS.map((w) => {
+        {workers.map((w) => {
           const onboarded = isWorkerOnboarded(w);
           return (
             <li

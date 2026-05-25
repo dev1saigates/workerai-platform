@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AddEntryModal } from "@/components/add-entry-modal";
 import { IconCopy } from "@/components/app-icons";
 import {
   CLAW_CHANNELS,
@@ -11,8 +12,17 @@ import {
   type ClawIngestItem,
 } from "@/lib/claw-data";
 
+const TEST_INGEST_FIELDS = [
+  { name: "channel", label: "Channel", required: true, placeholder: "Email, Web Form…" },
+  { name: "source", label: "Source", required: true },
+  { name: "subject", label: "Subject", required: true },
+  { name: "snippet", label: "Preview text", type: "textarea" as const },
+];
+
 export function ClawContent() {
   const [copied, setCopied] = useState(false);
+  const [recent, setRecent] = useState(CLAW_RECENT_ITEMS);
+  const [ingestOpen, setIngestOpen] = useState(false);
 
   async function copyWebhook() {
     try {
@@ -37,12 +47,37 @@ export function ClawContent() {
         </div>
         <button
           type="button"
+          onClick={() => setIngestOpen(true)}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
         >
           <span className="text-lg leading-none">+</span>
           Test Ingest
         </button>
       </div>
+
+      <AddEntryModal
+        open={ingestOpen}
+        onClose={() => setIngestOpen(false)}
+        title="Test ingestion"
+        subtitle="Adds a demo row to Recent Ingestion (webhook API later)."
+        fields={TEST_INGEST_FIELDS}
+        submitLabel="Ingest"
+        onSubmit={(v) => {
+          setRecent((prev) => [
+            {
+              id: `i-${Date.now()}`,
+              channel: v.channel.trim(),
+              source: v.source.trim(),
+              subject: v.subject.trim(),
+              snippet: v.snippet.trim() || "—",
+              tag: "test",
+              sentiment: "neutral",
+              ago: "just now",
+            },
+            ...prev,
+          ]);
+        }}
+      />
 
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Today" value={CLAW_STATS.today} tone="muted" />
@@ -97,10 +132,10 @@ export function ClawContent() {
 
       <section>
         <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
-          Recent Ingestion ({CLAW_RECENT_ITEMS.length})
+          Recent Ingestion ({recent.length})
         </h3>
         <ul className="space-y-3">
-          {CLAW_RECENT_ITEMS.map((item) => (
+          {recent.map((item) => (
             <IngestRow key={item.id} item={item} />
           ))}
         </ul>

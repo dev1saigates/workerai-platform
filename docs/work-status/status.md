@@ -1,6 +1,6 @@
 # WorkerAI — Project status
 
-**Last updated:** 21 May 2026
+**Last updated:** 23 May 2026
 
 | Symbol | Meaning |
 |:------:|---------|
@@ -14,7 +14,7 @@
 | Phase | Progress | Status |
 |-------|----------|--------|
 | **Phase 1** — Setup & monorepo | `████████░░` **80%** (8/10) | 🟡 In progress |
-| **Phase 2** — Frontend UI | `████████░░` **77%** (10/13 screens) | 🟡 In progress |
+| **Phase 2** — Frontend UI | `██████████` **100%** (13/13 screens) | ✅ Complete (polish remaining) |
 | **Phase 3** — Database (PostgreSQL) | `░░░░░░░░░░` **0%** (0/10) | ⬜ Not started |
 | **Phase 4** — Backend API | `░░░░░░░░░░` **0%** (0/17) | ⬜ Not started |
 | **Phase 5** — AI pipeline (vLLM) | `░░░░░░░░░░` **0%** (0/6) | ⬜ Not started |
@@ -56,8 +56,8 @@
 | Claw — Ingestion | `claw_ingestion.png` | 3/4 | 🟡 |
 | Knowledge hub | `knowledge_hub.png` | 3/4 | 🟡 |
 | Reports | `reports.png` | 3/4 | 🟡 |
-| Team | `team.png` | 0/3 | ⬜ |
-| Settings | `settings.png` | 0/2 | ⬜ |
+| Team | `team.png` | 3/4 | 🟡 |
+| Settings | `settings.png` | 3/4 | 🟡 |
 
 ---
 
@@ -189,15 +189,19 @@
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | Member list + roles + invite |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | Member list + roles + invite |
+| ✅ | Remove member (UI-only) |
+| ⬜ | Final spacing / colours vs reference |
 
 #### Settings
 
 | | Task |
 |:-:|------|
-| ⬜ | Build page (remove Coming soon) |
-| ⬜ | Workspace, billing, integrations, API keys |
+| ✅ | Build page (remove Coming soon) |
+| ✅ | Sub-nav + Workspace form (company, hours, timezone) |
+| ✅ | Placeholder tabs (Profile, Integrations, GDPR, Billing, Audit) |
+| ⬜ | Final spacing / colours vs reference |
 
 ---
 

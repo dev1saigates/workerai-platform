@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { SettingsContent } from "./settings-content";
 
 export const metadata: Metadata = { title: "Settings | WorkerAI" };
 
 export default function SettingsPage() {
-  return <ComingSoon title="Settings" />;
+  return <SettingsContent />;
 }
