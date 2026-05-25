@@ -50,6 +50,13 @@ type OnboardingStep =
   | "approval"
   | "done";
 
+/** Steps that have a question in ONBOARDING (not welcome / done). */
+type OnboardingQuestionStep = Exclude<OnboardingStep, "welcome" | "done">;
+
+function isQuestionStep(step: OnboardingStep): step is OnboardingQuestionStep {
+  return step !== "welcome" && step !== "done";
+}
+
 type StepConfig = {
   /** Question shown by the agent. */
   question: (worker: Worker) => string;
@@ -60,10 +67,10 @@ type StepConfig = {
   /** What the agent says after the user answers (acknowledgement). */
   ack: (answer: string) => string;
   /** The next step in the flow. */
-  next: OnboardingStep;
+  next: OnboardingQuestionStep | "done";
 };
 
-const ONBOARDING: Record<Exclude<OnboardingStep, "welcome" | "done">, StepConfig> = {
+const ONBOARDING: Record<OnboardingQuestionStep, StepConfig> = {
   purpose: {
     question: (w) =>
       `First — in one or two sentences, what's the main thing you'd like me to do as your ${w.role.toLowerCase()}?`,
@@ -195,7 +202,7 @@ export function WorkerChat({ worker }: { worker: Worker }) {
     setMessages((prev) => [...prev, makeMsg("user", text)]);
     setInput("");
 
-    if (!onboarded && step !== "welcome" && step !== "done") {
+    if (!onboarded && isQuestionStep(step)) {
       const cfg = ONBOARDING[step];
       const answer = text;
       setAnswers((a) => ({ ...a, [step]: answer }));
@@ -216,7 +223,7 @@ export function WorkerChat({ worker }: { worker: Worker }) {
           );
           setOnboarded(worker.slug, true);
           setOnboardedState(true);
-        } else {
+        } else if (isQuestionStep(nextStep)) {
           followUp.push(makeMsg("agent", ONBOARDING[nextStep].question(worker)));
         }
 
@@ -268,7 +275,7 @@ export function WorkerChat({ worker }: { worker: Worker }) {
 
   const activeStep = useMemo(() => {
     if (onboarded) return null;
-    if (step === "welcome" || step === "done") return null;
+    if (!isQuestionStep(step)) return null;
     return ONBOARDING[step];
   }, [step, onboarded]);
 
