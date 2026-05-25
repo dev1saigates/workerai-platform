@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { AUDIT_EVENTS, type AuditEvent } from "@/lib/audit-data";
 import { BILLING_PLANS, CURRENT_PLAN_USAGE } from "@/lib/billing-data";
-import { WORKSPACE_DEFAULTS } from "@/lib/settings-data";
+import {
+  INTEGRATION_CATEGORY_LABELS,
+  INTEGRATIONS,
+  PROFILE_DEFAULTS,
+  WORKSPACE_DEFAULTS,
+  type IntegrationItem,
+} from "@/lib/settings-data";
 
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 dark:border-white/10 dark:bg-white/[0.04] dark:text-white";
@@ -91,24 +97,114 @@ export function WorkspacePanel() {
 }
 
 export function ProfilePanel() {
+  const [fullName, setFullName] = useState(PROFILE_DEFAULTS.fullName);
+  const [email, setEmail] = useState(PROFILE_DEFAULTS.email);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [photoHint, setPhotoHint] = useState<string | null>(null);
+
+  const initials =
+    fullName
+      .split(/\s+/)
+      .map((p) => p[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || PROFILE_DEFAULTS.initials;
+
+  function onPhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setPhotoHint("Please choose an image file (JPG, PNG, or WebP).");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarUrl(reader.result as string);
+      setPhotoHint("Photo updated (demo — not saved to server yet).");
+      window.setTimeout(() => setPhotoHint(null), 3000);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  }
+
+  function removePhoto() {
+    setAvatarUrl(null);
+    setPhotoHint("Photo removed (demo).");
+    window.setTimeout(() => setPhotoHint(null), 3000);
+  }
+
   return (
     <section>
       <h2 className="mb-6 text-xl font-semibold text-slate-900 dark:text-white">
         Profile
       </h2>
+
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-slate-200 dark:border-white/15">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- demo preview from FileReader
+            <img
+              src={avatarUrl}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-violet-500 to-indigo-600 text-xl font-semibold text-white">
+              {initials}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <label className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#5b6cff]/20 hover:opacity-95">
+            Change photo
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="sr-only"
+              onChange={onPhotoChange}
+            />
+          </label>
+          {avatarUrl ? (
+            <button
+              type="button"
+              onClick={removePhoto}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 dark:border-white/15 dark:text-slate-200"
+            >
+              Remove photo
+            </button>
+          ) : null}
+        </div>
+      </div>
+      {photoHint ? (
+        <p className="mb-6 text-sm text-emerald-600 dark:text-emerald-400">
+          {photoHint}
+        </p>
+      ) : null}
+
       <div className="grid max-w-lg gap-5">
         <Field label="Full name">
-          <input type="text" defaultValue="Sarah Wilson" className={inputClass} />
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className={inputClass}
+          />
         </Field>
         <Field label="Work email">
           <input
             type="email"
-            defaultValue="sarah@innovatedigital.co.uk"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className={inputClass}
           />
         </Field>
         <Field label="Role">
-          <input type="text" defaultValue="Owner" disabled className={inputClass} />
+          <input
+            type="text"
+            defaultValue={PROFILE_DEFAULTS.role}
+            disabled
+            className={inputClass}
+          />
         </Field>
         <button
           type="button"
@@ -122,43 +218,112 @@ export function ProfilePanel() {
 }
 
 export function IntegrationsPanel() {
-  const items = [
-    { name: "Gmail", status: "Not connected", emoji: "📧" },
-    { name: "Google Calendar", status: "Not connected", emoji: "📅" },
-    { name: "LinkedIn", status: "Not connected", emoji: "💼" },
-  ];
+  const [items, setItems] = useState(INTEGRATIONS);
+
+  const categories = [
+    "email",
+    "calendar",
+    "social",
+    "crm",
+    "finance",
+    "automation",
+  ] as const;
+
+  function toggleConnect(id: string) {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              status:
+                item.status === "connected" ? "not_connected" : "connected",
+            }
+          : item,
+      ),
+    );
+  }
+
   return (
     <section>
-      <h2 className="mb-6 text-xl font-semibold text-slate-900 dark:text-white">
+      <h2 className="mb-2 text-xl font-semibold text-slate-900 dark:text-white">
         Integrations
       </h2>
-      <ul className="space-y-3">
-        {items.map((item) => (
-          <li
-            key={item.name}
-            className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white px-4 py-4 dark:border-white/[0.08] dark:bg-white/[0.03]"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-xl" aria-hidden>
-                {item.emoji}
-              </span>
-              <div>
-                <p className="font-medium text-slate-900 dark:text-white">
-                  {item.name}
-                </p>
-                <p className="text-sm text-slate-500">{item.status}</p>
-              </div>
+      <p className="mb-6 max-w-xl text-sm text-slate-500 dark:text-slate-400">
+        Connect tools your AI workers use. Only UK/EU-approved services are listed.
+      </p>
+
+      <div className="space-y-8">
+        {categories.map((cat) => {
+          const group = items.filter((i) => i.category === cat);
+          if (group.length === 0) return null;
+          return (
+            <div key={cat}>
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                {INTEGRATION_CATEGORY_LABELS[cat]}
+              </h3>
+              <ul className="space-y-3">
+                {group.map((item) => (
+                  <IntegrationRow
+                    key={item.id}
+                    item={item}
+                    onToggle={() => toggleConnect(item.id)}
+                  />
+                ))}
+              </ul>
             </div>
-            <button
-              type="button"
-              className="rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-3 py-1.5 text-xs font-semibold text-white"
-            >
-              Connect
-            </button>
-          </li>
-        ))}
-      </ul>
+          );
+        })}
+      </div>
     </section>
+  );
+}
+
+function IntegrationRow({
+  item,
+  onToggle,
+}: {
+  item: IntegrationItem;
+  onToggle: () => void;
+}) {
+  const connected = item.status === "connected";
+  return (
+    <li className="flex flex-col gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/[0.08] dark:bg-white/[0.03]">
+      <div className="flex min-w-0 items-center gap-3">
+        <span
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xl dark:bg-white/[0.06]"
+          aria-hidden
+        >
+          {item.emoji}
+        </span>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-medium text-slate-900 dark:text-white">
+              {item.name}
+            </p>
+            {connected ? (
+              <span className="inline-flex rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase text-emerald-700 ring-1 ring-emerald-500/25 dark:text-emerald-300">
+                Connected
+              </span>
+            ) : null}
+          </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            {item.description}
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onToggle}
+        className={[
+          "shrink-0 rounded-lg px-4 py-2 text-xs font-semibold transition",
+          connected
+            ? "border border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-white/15 dark:text-slate-200"
+            : "bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] text-white hover:opacity-95",
+        ].join(" ")}
+      >
+        {connected ? "Disconnect" : "Connect"}
+      </button>
+    </li>
   );
 }
 
