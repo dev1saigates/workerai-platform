@@ -10,6 +10,15 @@ import {
   IconSend,
 } from "@/components/app-icons";
 import {
+  advanceOnboarding,
+  getInitialOnboardingMessages,
+  getStepConfig,
+  isQuestionStep,
+  ONBOARDING_STEP_ORDER,
+  type OnboardingStep,
+  type StepConfig,
+} from "@/lib/worker-chat-onboarding";
+import {
   isOnboarded,
   setOnboarded,
   type Worker,
@@ -31,7 +40,7 @@ import {
  */
 
 // ---------------------------------------------------------------------------
-// Types & onboarding script
+// Types & helpers
 // ---------------------------------------------------------------------------
 
 type ChatMessage = {
@@ -40,90 +49,6 @@ type ChatMessage = {
   text: string;
   time: string;
 };
-
-type OnboardingStep =
-  | "welcome"
-  | "purpose"
-  | "tone"
-  | "audience"
-  | "constraints"
-  | "approval"
-  | "done";
-
-/** Steps that have a question in ONBOARDING (not welcome / done). */
-type OnboardingQuestionStep = Exclude<OnboardingStep, "welcome" | "done">;
-
-function isQuestionStep(step: OnboardingStep): step is OnboardingQuestionStep {
-  return step !== "welcome" && step !== "done";
-}
-
-type StepConfig = {
-  /** Question shown by the agent. */
-  question: (worker: Worker) => string;
-  /** Optional quick-reply chips beneath the input. */
-  chips?: readonly string[];
-  /** Whether the user can skip this question. */
-  skippable?: boolean;
-  /** What the agent says after the user answers (acknowledgement). */
-  ack: (answer: string) => string;
-  /** The next step in the flow. */
-  next: OnboardingQuestionStep | "done";
-};
-
-const ONBOARDING: Record<OnboardingQuestionStep, StepConfig> = {
-  purpose: {
-    question: (w) =>
-      `First — in one or two sentences, what's the main thing you'd like me to do as your ${w.role.toLowerCase()}?`,
-    ack: () => "Got it. That gives me a clear focus.",
-    next: "tone",
-  },
-  tone: {
-    question: () =>
-      "What tone should I use when I write? Pick one or type your own.",
-    chips: ["Formal", "Friendly", "Casual", "Direct"] as const,
-    ack: (a) => `Noted — I'll keep things ${a.toLowerCase()}.`,
-    next: "audience",
-  },
-  audience: {
-    question: () =>
-      "Who is my main audience? Tap a suggestion or type something specific.",
-    chips: ["Clients", "Suppliers", "Internal team", "Mixed"] as const,
-    ack: (a) => `Understood — writing for ${a.toLowerCase()}.`,
-    next: "constraints",
-  },
-  constraints: {
-    question: () =>
-      "Anything I should never do, or topics I should stay away from? (You can skip this.)",
-    skippable: true,
-    ack: (a) =>
-      a.toLowerCase() === "skip" || !a.trim()
-        ? "No problem, I'll use sensible defaults."
-        : "Got it — I'll steer clear of that.",
-    next: "approval",
-  },
-  approval: {
-    question: () =>
-      "Last one — when should I act without asking you first?",
-    chips: [
-      "Never (always ask)",
-      "Only low-risk tasks",
-      "Most tasks",
-      "Almost everything",
-    ] as const,
-    ack: (a) => `Perfect — I'll follow "${a}".`,
-    next: "done",
-  },
-};
-
-const STEP_ORDER: OnboardingStep[] = [
-  "welcome",
-  "purpose",
-  "tone",
-  "audience",
-  "constraints",
-  "approval",
-  "done",
-];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -172,14 +97,9 @@ export function WorkerChat({ worker }: { worker: Worker }) {
         ),
       ]);
     } else {
-      setMessages([
-        makeMsg(
-          "agent",
-          `Hi! I'm ${worker.name}. Before I get to work, I'd like to learn a few things about how you want me to help. It'll only take a minute.`,
-        ),
-        makeMsg("agent", ONBOARDING.purpose.question(worker)),
-      ]);
-      setStep("purpose");
+      const initial = getInitialOnboardingMessages(worker);
+      setMessages(initial.messages.map((text) => makeMsg("agent", text)));
+      setStep(initial.step);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onboarded]);
@@ -203,32 +123,25 @@ export function WorkerChat({ worker }: { worker: Worker }) {
     setInput("");
 
     if (!onboarded && isQuestionStep(step)) {
-      const cfg = ONBOARDING[step];
+      const currentStep = step;
       const answer = text;
-      setAnswers((a) => ({ ...a, [step]: answer }));
+      setAnswers((a) => ({ ...a, [currentStep]: answer }));
 
-      // Agent "thinks" then acknowledges + asks the next question.
       setAgentTyping(true);
       window.setTimeout(() => {
-        const ack = cfg.ack(answer);
-        const nextStep = cfg.next;
-        const followUp: ChatMessage[] = [makeMsg("agent", ack)];
+        const result = advanceOnboarding(currentStep, answer, worker);
+        const followUp: ChatMessage[] = [
+          makeMsg("agent", result.ack),
+          ...result.agentLines.map((line) => makeMsg("agent", line)),
+        ];
 
-        if (nextStep === "done") {
-          followUp.push(
-            makeMsg(
-              "agent",
-              `Brilliant — I have everything I need. From now on, just message me normally and I'll draft something for your approval.`,
-            ),
-          );
+        if (result.complete) {
           setOnboarded(worker.slug, true);
           setOnboardedState(true);
-        } else if (isQuestionStep(nextStep)) {
-          followUp.push(makeMsg("agent", ONBOARDING[nextStep].question(worker)));
         }
 
         setMessages((prev) => [...prev, ...followUp]);
-        setStep(nextStep);
+        setStep(result.nextStep);
         setAgentTyping(false);
       }, 650);
       return;
@@ -273,10 +186,10 @@ export function WorkerChat({ worker }: { worker: Worker }) {
   // Current-step quick replies (only during onboarding)
   // ------------------------------------------------------------------
 
-  const activeStep = useMemo(() => {
+  const activeStep = useMemo((): StepConfig | null => {
     if (onboarded) return null;
     if (!isQuestionStep(step)) return null;
-    return ONBOARDING[step];
+    return getStepConfig(step);
   }, [step, onboarded]);
 
   // ------------------------------------------------------------------
@@ -557,8 +470,8 @@ function DaySeparator({ label }: { label: string }) {
 }
 
 function ProgressPill({ step }: { step: OnboardingStep }) {
-  const stepIndex = STEP_ORDER.indexOf(step);
-  const total = STEP_ORDER.length - 2; // exclude "welcome" and "done"
+  const stepIndex = ONBOARDING_STEP_ORDER.indexOf(step);
+  const total = ONBOARDING_STEP_ORDER.length - 2; // exclude "welcome" and "done"
   const current = Math.max(0, Math.min(total, stepIndex)); // 0..total
   const pct = Math.round((current / total) * 100);
   return (
