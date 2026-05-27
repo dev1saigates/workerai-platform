@@ -42,9 +42,9 @@ export function SignInForm() {
     router.push("/dashboard");
   }
   return (
-    <div className="w-full max-w-[440px] rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50 dark:border-white/10 dark:bg-[#0f1523] dark:shadow-2xl dark:shadow-black/40">
+    <div className="app-panel-solid w-full max-w-[440px] rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50 dark:shadow-2xl dark:shadow-[#00b4ff]/10">
       <div className="mb-8 flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#3b5bfd] text-lg font-bold text-white">
+        <div className="brand-gradient flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-lg font-bold text-white shadow-[0_0_20px_rgba(0,180,255,0.4)]">
           W
         </div>
         <div>
@@ -69,7 +69,7 @@ export function SignInForm() {
             type="email"
             autoComplete="email"
             placeholder="you@company.com"
-            className="w-full rounded-lg border border-white/10 bg-[#151c2e] px-3 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#5b6cff]/50 focus:ring-[#5b6cff]/25"
+            className="w-full rounded-lg border border-white/10 bg-[#151c2e] px-3 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#00b4ff]/50 focus:ring-[#00b4ff]/25"
             {...register("email")}
           />
           {errors.email && (
@@ -89,7 +89,7 @@ export function SignInForm() {
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="••••••••"
-              className="w-full rounded-lg border border-white/10 bg-[#151c2e] py-2.5 pr-11 pl-3 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#5b6cff]/50 focus:ring-[#5b6cff]/25"
+              className="w-full rounded-lg border border-white/10 bg-[#151c2e] py-2.5 pr-11 pl-3 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#00b4ff]/50 focus:ring-[#00b4ff]/25"
               {...register("password")}
             />
             <button
@@ -113,7 +113,7 @@ export function SignInForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] py-3 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/20 transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center rounded-lg btn-brand py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? "Signing in…" : "Sign in"}
         </button>

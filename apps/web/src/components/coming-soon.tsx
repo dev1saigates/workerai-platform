@@ -14,7 +14,7 @@ export function ComingSoon({ title, description }: ComingSoonProps) {
       </p>
       <Link
         href="/dashboard"
-        className="mt-6 inline-block text-sm font-medium text-violet-600 hover:text-violet-500 dark:text-violet-400"
+        className="mt-6 inline-block text-sm font-medium text-[#00b4ff] hover:text-[#0ea5e9] dark:text-[#38bdf8]"
       >
         ← Back to Command Centre
       </Link>

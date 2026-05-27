@@ -89,7 +89,7 @@ export function TaskLogContent() {
           <button
             type="button"
             onClick={() => setCreateOpen(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
+            className="inline-flex items-center justify-center gap-2 rounded-lg btn-brand px-4 py-2.5 text-sm font-semibold text-white"
           >
             <span className="text-lg leading-none">+</span>
             Create Task
@@ -186,7 +186,7 @@ function FilterChip({
       className={[
         "rounded-full px-3 py-1.5 text-xs font-medium transition",
         active
-          ? "bg-violet-600/15 text-violet-700 ring-1 ring-violet-500/30 dark:bg-violet-600/25 dark:text-violet-200"
+          ? "bg-[#00b4ff]/15 text-[#0088ff] ring-1 ring-[#00b4ff]/30 dark:bg-[#00b4ff]/20 dark:text-[#bae6fd]"
           : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-white/[0.06] dark:text-slate-400 dark:hover:bg-white/[0.1]",
       ].join(" ")}
     >

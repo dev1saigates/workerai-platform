@@ -42,7 +42,7 @@ export function TeamContent() {
         <button
           type="button"
           onClick={() => setInviteOpen(true)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg btn-brand px-4 py-2.5 text-sm font-semibold text-white"
         >
           <span className="text-lg leading-none">+</span>
           Invite
@@ -97,7 +97,7 @@ function MemberRow({
   return (
     <li>
       <article className="flex items-center gap-4 rounded-xl border border-slate-200/80 bg-white px-4 py-4 shadow-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-sm font-semibold text-white">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00b4ff] to-[#0066ff] text-sm font-semibold text-white">
           {member.initials}
         </div>
         <div className="min-w-0 flex-1">
@@ -132,7 +132,7 @@ function RoleBadge({ role }: { role: TeamRole }) {
     manager:
       "bg-amber-500/15 text-amber-800 ring-amber-500/30 dark:text-amber-300",
     member:
-      "bg-violet-500/15 text-violet-700 ring-violet-500/25 dark:text-violet-300",
+      "bg-[#00b4ff]/15 text-[#0088ff] ring-[#00b4ff]/25 dark:text-[#7dd3fc]",
   };
   return (
     <span

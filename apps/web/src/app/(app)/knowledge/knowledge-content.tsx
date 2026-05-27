@@ -41,7 +41,7 @@ export function KnowledgeContent() {
         <button
           type="button"
           onClick={() => setUploadOpen(true)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg btn-brand px-4 py-2.5 text-sm font-semibold text-white"
         >
           <IconUpload />
           Upload
@@ -67,7 +67,7 @@ export function KnowledgeContent() {
             className={[
               "rounded-full px-3 py-1.5 text-xs font-medium transition",
               category === cat.id
-                ? "bg-violet-600/15 text-violet-700 ring-1 ring-violet-500/30 dark:bg-violet-600/25 dark:text-violet-200"
+                ? "bg-[#00b4ff]/15 text-[#0088ff] ring-1 ring-[#00b4ff]/30 dark:bg-[#00b4ff]/20 dark:text-[#bae6fd]"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-white/[0.06] dark:text-slate-400 dark:hover:bg-white/[0.1]",
             ].join(" ")}
           >
@@ -107,7 +107,7 @@ export function KnowledgeContent() {
           <li key={slot.label}>
             <button
               type="button"
-              className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/50 px-4 py-8 text-center transition hover:border-violet-400/50 hover:bg-violet-50/30 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-violet-500/40 dark:hover:bg-violet-500/[0.06]"
+              className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/50 px-4 py-8 text-center transition hover:border-[#00b4ff]/40 hover:bg-[#00b4ff]/10 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-[#00b4ff]/40 dark:hover:bg-[#00b4ff]/[0.08]"
             >
               <span className="text-2xl" aria-hidden>
                 {slot.emoji}

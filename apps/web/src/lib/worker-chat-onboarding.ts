@@ -29,44 +29,44 @@ export type StepConfig = {
 const ONBOARDING: Record<OnboardingQuestionStep, StepConfig> = {
   purpose: {
     question: (w) =>
-      `First — in one or two sentences, what's the main thing you'd like me to do as your ${w.role.toLowerCase()}?`,
-    ack: () => "Got it. That gives me a clear focus.",
+      `To start — in your own words, what should I mainly help with as your ${w.role.toLowerCase()}? A sentence or two is plenty.`,
+    ack: () => "Thanks — that's really helpful. I've got a clear picture now.",
     next: "tone",
   },
   tone: {
     question: () =>
-      "What tone should I use when I write? Pick one or type your own.",
+      "How should I sound when I write for you? Pick something close, or type your own.",
     chips: ["Formal", "Friendly", "Casual", "Direct"] as const,
-    ack: (a) => `Noted — I'll keep things ${a.toLowerCase()}.`,
+    ack: (a) => `Lovely — I'll keep a ${a.toLowerCase()} tone in mind.`,
     next: "audience",
   },
   audience: {
     question: () =>
-      "Who is my main audience? Tap a suggestion or type something specific.",
+      "Who am I usually writing for? Tap an option below or tell me in your own words.",
     chips: ["Clients", "Suppliers", "Internal team", "Mixed"] as const,
-    ack: (a) => `Understood — writing for ${a.toLowerCase()}.`,
+    ack: (a) => `Got it — I'll picture ${a.toLowerCase()} when I draft.`,
     next: "constraints",
   },
   constraints: {
     question: () =>
-      "Anything I should never do, or topics I should stay away from? (You can skip this.)",
+      "Anything you'd rather I never mention, or always avoid? (Totally fine to skip.)",
     skippable: true,
     ack: (a) =>
       a.toLowerCase() === "skip" || !a.trim()
-        ? "No problem, I'll use sensible defaults."
-        : "Got it — I'll steer clear of that.",
+        ? "No worries — I'll stick to sensible, professional defaults."
+        : "Understood — I'll keep well clear of that.",
     next: "approval",
   },
   approval: {
     question: () =>
-      "Last one — when should I act without asking you first?",
+      "Last thing — when is it okay for me to move ahead without checking with you first?",
     chips: [
       "Never (always ask)",
       "Only low-risk tasks",
       "Most tasks",
       "Almost everything",
     ] as const,
-    ack: (a) => `Perfect — I'll follow "${a}".`,
+    ack: (a) => `Perfect — I'll work to "${a}" unless you tell me otherwise.`,
     next: "done",
   },
 };
@@ -82,7 +82,7 @@ export const ONBOARDING_STEP_ORDER: readonly OnboardingStep[] = [
 ] as const;
 
 const ONBOARDING_COMPLETE_MESSAGE =
-  "Brilliant — I have everything I need. From now on, just message me normally and I'll draft something for your approval.";
+  "That's everything I need for now — thank you. From here on, just message me like you would a colleague. I'll draft things for you, and nothing goes out until you've approved it.";
 
 export function isQuestionStep(
   step: OnboardingStep,
@@ -102,7 +102,7 @@ export function getInitialOnboardingMessages(worker: Worker): {
 } {
   return {
     messages: [
-      `Hi! I'm ${worker.name}. Before I get to work, I'd like to learn a few things about how you want me to help. It'll only take a minute.`,
+      `Hi — I'm ${worker.name}. Before we get into the day-to-day, I'd love to learn how you like to work. It only takes a minute, and you can skip anything you're not sure about.`,
       ONBOARDING.purpose.question(worker),
     ],
     step: "purpose",

@@ -64,7 +64,7 @@ export function ReportsContent() {
         <ChartPanel title="Tasks Per Day">
           <div className="mb-4 flex gap-4 text-xs text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-sm bg-violet-500" />
+              <span className="h-2 w-2 rounded-sm bg-[#00b4ff]" />
               Total tasks
             </span>
             <span className="flex items-center gap-1.5">
@@ -80,7 +80,7 @@ export function ReportsContent() {
               >
                 <div className="flex w-full max-w-[2rem] items-end justify-center gap-0.5">
                   <div
-                    className="w-2 rounded-t bg-violet-500"
+                    className="w-2 rounded-t bg-[#00b4ff]"
                     style={{
                       height: `${(day.total / maxBar) * 120}px`,
                       minHeight: day.total > 0 ? "4px" : "0",

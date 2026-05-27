@@ -27,6 +27,7 @@ import {
   IconSearch,
   IconWorkflow,
 } from "./app-icons";
+import { appCanvas } from "@/lib/brand";
 import { ThemeToggle } from "./theme-toggle";
 
 /**
@@ -40,7 +41,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileNav, setMobileNav] = useState(false);
 
   return (
-    <div className="flex min-h-dvh bg-slate-100 text-slate-900 dark:bg-[#080c14] dark:text-white">
+    <div
+      className={`flex min-h-dvh bg-slate-100 text-slate-900 dark:text-white ${appCanvas}`}
+    >
       {mobileNav ? (
         <button
           type="button"
@@ -52,13 +55,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-slate-200 bg-white transition-transform duration-200 dark:border-white/[0.08] dark:bg-[#0a0e16] lg:static lg:translate-x-0",
+          "app-panel fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-slate-200 bg-white transition-transform duration-200 lg:static lg:translate-x-0",
           mobileNav ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         ].join(" ")}
       >
-        <div className="border-b border-slate-200 p-4 dark:border-white/[0.08]">
+        <div className="border-b border-slate-200 p-4 dark:border-[#00b4ff]/10">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#2563eb] text-sm font-bold text-white shadow-[0_0_20px_rgba(37,99,235,0.35)]">
+            <div className="brand-gradient flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white shadow-[0_0_20px_rgba(0,180,255,0.4)]">
               W
             </div>
             <div className="min-w-0 flex-1">
@@ -131,8 +134,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="border-t border-slate-200 p-3 dark:border-white/[0.08]">
-          <div className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-white/[0.04]">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-xs font-semibold text-white">
+          <div className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-[#00b4ff]/8 dark:ring-1 dark:ring-[#00b4ff]/15">
+            <div className="brand-gradient flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold text-white">
               SW
             </div>
             <div className="min-w-0 flex-1">
@@ -152,7 +155,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 items-center justify-between gap-4 border-b border-slate-200 bg-white/90 px-4 backdrop-blur-md dark:border-white/[0.08] dark:bg-[#080c14]/90 lg:h-16 lg:px-8">
+        <header className="app-panel-solid flex h-14 items-center justify-between gap-4 border-b border-slate-200 bg-white/90 px-4 backdrop-blur-md lg:h-16 lg:px-8">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -180,7 +183,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               aria-label="Notifications"
             >
               <IconBell />
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-violet-500 ring-2 ring-white dark:ring-[#080c14]" />
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#00b4ff] ring-2 ring-white dark:ring-[#061828]" />
             </button>
           </div>
         </header>
@@ -252,15 +255,15 @@ function WorkersNav({
           className={[
             "group flex flex-1 cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
             parentActive
-              ? "bg-violet-600/15 font-medium text-violet-700 ring-1 ring-violet-500/30 dark:bg-violet-600/25 dark:text-white dark:ring-violet-500/35"
-              : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.07] dark:hover:text-white",
+              ? "bg-[#00b4ff]/10 font-medium text-[#0066ff] ring-1 ring-[#00b4ff]/25 dark:nav-active"
+              : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#00b4ff]/8 dark:hover:text-white",
           ].join(" ")}
         >
           <span
             className={[
               "transition-colors [&>svg]:shrink-0",
               parentActive
-                ? "text-violet-600 dark:text-[#7ab6ff]"
+                ? "text-[#0088ff] dark:nav-active-icon"
                 : "text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300",
             ].join(" ")}
           >
@@ -299,8 +302,8 @@ function WorkersNav({
                   className={[
                     "group flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px] transition-colors",
                     active
-                      ? "bg-violet-600/15 font-medium text-violet-700 ring-1 ring-violet-500/30 dark:bg-violet-600/25 dark:text-white dark:ring-violet-500/35"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.05] dark:hover:text-white",
+                      ? "bg-[#00b4ff]/10 font-medium text-[#0066ff] ring-1 ring-[#00b4ff]/25 dark:nav-active"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#00b4ff]/8 dark:hover:text-white",
                   ].join(" ")}
                   title={
                     onboarded
@@ -353,15 +356,15 @@ function NavItem({
       className={[
         "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
         active
-          ? "bg-violet-600/15 font-medium text-violet-700 ring-1 ring-violet-500/30 dark:bg-violet-600/25 dark:text-white dark:ring-violet-500/35"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.07] dark:hover:text-white",
+          ? "bg-[#00b4ff]/10 font-medium text-[#0066ff] ring-1 ring-[#00b4ff]/25 dark:nav-active"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#00b4ff]/8 dark:hover:text-white",
       ].join(" ")}
     >
       <span
         className={[
           "transition-colors [&>svg]:shrink-0",
           active
-            ? "text-violet-600 dark:text-[#7ab6ff]"
+            ? "text-[#0088ff] dark:nav-active-icon"
             : "text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300",
         ].join(" ")}
       >

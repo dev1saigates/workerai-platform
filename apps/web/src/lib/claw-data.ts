@@ -42,7 +42,7 @@ export const CLAW_CHANNELS: ClawChannel[] = [
   {
     id: "web-forms",
     icon: "📝",
-    iconBg: "bg-violet-500/15 text-violet-600 dark:text-violet-300",
+    iconBg: "bg-[#00b4ff]/15 text-[#00b4ff] dark:text-[#7dd3fc]",
     name: "Web Forms",
     hint: "Webhook + embed forms",
     status: "connected",

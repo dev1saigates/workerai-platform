@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AddEntryModal } from "@/components/add-entry-modal";
 import { IconGear, IconRobotSm } from "@/components/app-icons";
+import { WorkerAvatar } from "@/components/worker-avatar";
+import { brandCta } from "@/lib/brand";
 import {
   ONBOARDING_EVENT,
   WORKERS,
@@ -56,7 +58,7 @@ export function WorkersContent() {
         <button
           type="button"
           onClick={() => setAddOpen(true)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
+          className={`${brandCta} shrink-0 gap-2 rounded-lg px-4 py-2.5 text-sm`}
         >
           <span className="text-lg leading-none">+</span>
           Add Worker
@@ -98,16 +100,11 @@ export function WorkersContent() {
           return (
             <li
               key={w.id}
-              className="flex flex-col rounded-xl border border-slate-200 bg-white dark:border-white/[0.08] dark:bg-[#0e131d]"
+              className="app-card flex flex-col rounded-xl border border-slate-200 bg-white"
             >
               <div className="flex items-start justify-between gap-3 border-b border-slate-100 px-4 py-4 dark:border-white/[0.06]">
                 <div className="flex items-center gap-3">
-                  <span
-                    className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 text-xl dark:bg-white/[0.06]"
-                    aria-hidden
-                  >
-                    {w.emoji}
-                  </span>
+                  <WorkerAvatar worker={w} size="lg" />
                   <div>
                     <p className="font-semibold text-slate-900 dark:text-white">
                       {w.name}
@@ -141,7 +138,7 @@ export function WorkersContent() {
               <div className="mt-auto flex border-t border-slate-100 dark:border-white/[0.06]">
                 <Link
                   href={`/workers/${w.slug}`}
-                  className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-violet-600 transition hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-white/[0.04]"
+                  className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-medium text-[#0088ff] transition hover:bg-[#00b4ff]/10 dark:text-[#7dd3fc] dark:hover:bg-[#00b4ff]/10"
                 >
                   <IconRobotSm />
                   {onboarded ? "Chat" : "Start onboarding"}

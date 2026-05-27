@@ -55,7 +55,7 @@ export function WorkflowsContent() {
         <button
           type="button"
           onClick={() => setAddOpen(true)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg btn-brand px-4 py-2.5 text-sm font-semibold text-white"
         >
           <span className="text-lg leading-none">+</span>
           New Workflow
@@ -94,7 +94,7 @@ export function WorkflowsContent() {
             <li key={t.id}>
               <button
                 type="button"
-                className="flex h-full w-full flex-col rounded-xl border border-dashed border-slate-300 bg-slate-50/80 p-5 text-left transition hover:border-violet-400/50 hover:bg-violet-50/30 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-violet-500/40 dark:hover:bg-violet-500/[0.06]"
+                className="flex h-full w-full flex-col rounded-xl border border-dashed border-slate-300 bg-slate-50/80 p-5 text-left transition hover:border-[#00b4ff]/40 hover:bg-[#00b4ff]/10 dark:border-white/15 dark:bg-white/[0.02] dark:hover:border-[#00b4ff]/40 dark:hover:bg-[#00b4ff]/[0.08]"
               >
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <span
@@ -103,7 +103,7 @@ export function WorkflowsContent() {
                   >
                     {t.emoji}
                   </span>
-                  <span className="rounded-md bg-violet-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-violet-700 ring-1 ring-violet-500/25 dark:text-violet-300">
+                  <span className="rounded-md bg-[#00b4ff]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#0088ff] ring-1 ring-[#00b4ff]/25 dark:text-[#7dd3fc]">
                     Template
                   </span>
                 </div>
@@ -147,7 +147,7 @@ function WorkflowRow({
             </span>
           </div>
           <p className="text-lg font-semibold text-slate-900 dark:text-white">{w.name}</p>
-          <p className="mt-1 text-sm text-violet-600/90 dark:text-violet-300/90">{w.steps}</p>
+          <p className="mt-1 text-sm text-[#00b4ff]/90 dark:text-[#7dd3fc]/90">{w.steps}</p>
           <p className="mt-2 text-xs text-slate-500">
             {w.runs} runs · {w.successRate}% success · by {w.createdBy}
           </p>

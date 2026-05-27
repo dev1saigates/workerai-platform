@@ -56,7 +56,7 @@ export function SignUpForm() {
   }
 
   const inputClass =
-    "w-full rounded-lg border border-white/10 bg-[#151c2e] px-3 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#5b6cff]/50 focus:ring-[#5b6cff]/25";
+    "w-full rounded-lg border border-white/10 bg-[#151c2e] px-3 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#00b4ff]/50 focus:ring-[#00b4ff]/25";
 
   return (
     <div className="w-full max-w-[480px] rounded-2xl border border-white/10 bg-[#0f1523] p-8 shadow-2xl shadow-black/40">
@@ -159,7 +159,7 @@ export function SignUpForm() {
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               placeholder="••••••••"
-              className="w-full rounded-lg border border-white/10 bg-[#151c2e] py-2.5 pr-11 pl-3 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#5b6cff]/50 focus:ring-[#5b6cff]/25"
+              className="w-full rounded-lg border border-white/10 bg-[#151c2e] py-2.5 pr-11 pl-3 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#00b4ff]/50 focus:ring-[#00b4ff]/25"
               {...register("password")}
             />
             <button
@@ -185,7 +185,7 @@ export function SignUpForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] py-3 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/20 transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center rounded-lg btn-brand py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? "Creating workspace…" : "Create workspace"}
         </button>

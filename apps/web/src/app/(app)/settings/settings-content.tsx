@@ -25,7 +25,7 @@ export function SettingsContent() {
             className={[
               "whitespace-nowrap rounded-lg px-3 py-2 text-left text-sm font-medium transition",
               tab === item.id
-                ? "bg-violet-600/15 text-violet-700 dark:bg-violet-600/25 dark:text-violet-200"
+                ? "bg-[#00b4ff]/15 text-[#0088ff] dark:bg-[#00b4ff]/20 dark:text-[#bae6fd]"
                 : "text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/[0.06]",
             ].join(" ")}
           >

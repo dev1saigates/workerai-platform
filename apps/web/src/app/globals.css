@@ -2,10 +2,181 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* WorkerAI electric blue theme (client brand) */
+@theme {
+  --color-brand-electric: #00b4ff;
+  --color-brand-blue: #0088ff;
+  --color-brand-deep: #0066ff;
+  --color-surface-app: #050810;
+  --color-surface-panel: #0a1018;
+  --color-surface-elevated: #0e1522;
+  --color-chat-agent: #141c2e;
+}
+
 :root {
   color-scheme: light dark;
+  --brand-gradient: linear-gradient(135deg, #00b4ff 0%, #0088ff 50%, #0066ff 100%);
+  --brand-gradient-soft: linear-gradient(
+    135deg,
+    rgba(0, 180, 255, 0.15) 0%,
+    rgba(0, 102, 255, 0.08) 100%
+  );
+  /* Electric blue dark canvas — visible gradient wash (client theme) */
+  --app-dark-base: #030818;
+  --app-dark-mid: #051222;
+  --app-dark-deep: #061828;
+  --app-dark-glow-top: rgba(0, 180, 255, 0.28);
+  --app-dark-glow-side: rgba(0, 102, 255, 0.2);
+  --app-dark-glow-bottom: rgba(0, 136, 255, 0.14);
 }
 
 body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Full-page electric blue gradient background in dark mode */
+.dark body {
+  background-color: var(--app-dark-base);
+  background-image:
+    radial-gradient(ellipse 130% 90% at 0% -15%, var(--app-dark-glow-top), transparent 52%),
+    radial-gradient(ellipse 100% 70% at 100% 5%, var(--app-dark-glow-side), transparent 48%),
+    radial-gradient(ellipse 80% 55% at 50% 110%, var(--app-dark-glow-bottom), transparent 50%),
+    linear-gradient(
+      165deg,
+      var(--app-dark-base) 0%,
+      var(--app-dark-mid) 45%,
+      var(--app-dark-deep) 100%
+    );
+  background-attachment: fixed;
+}
+
+/**
+ * App shell / main content — same gradient so every page feels on-brand.
+ * PHP analogy: a shared CSS class on your layout wrapper instead of per-page inline styles.
+ */
+.dark .app-canvas {
+  background-color: transparent;
+  background-image:
+    radial-gradient(ellipse 120% 80% at 0% -10%, var(--app-dark-glow-top), transparent 50%),
+    radial-gradient(ellipse 90% 65% at 100% 0%, var(--app-dark-glow-side), transparent 46%),
+    radial-gradient(ellipse 75% 50% at 50% 105%, var(--app-dark-glow-bottom), transparent 52%);
+}
+
+.dark .app-panel {
+  background-color: rgba(6, 20, 36, 0.72);
+  border-color: rgba(0, 180, 255, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.dark .app-panel-solid {
+  background-color: rgba(8, 24, 42, 0.92);
+  border-color: rgba(0, 180, 255, 0.14);
+}
+
+.dark .app-card {
+  background-color: rgba(10, 28, 48, 0.65);
+  border-color: rgba(0, 180, 255, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+/* Reusable brand utilities */
+.brand-gradient {
+  background-image: var(--brand-gradient);
+}
+
+.brand-gradient-text {
+  background-image: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Neon electric-blue button — smooth hover glow (all primary CTAs) */
+:root {
+  --neon-shadow-rest:
+    0 2px 8px rgba(0, 102, 255, 0.2),
+    0 4px 20px rgba(0, 180, 255, 0.22);
+  --neon-shadow-hover:
+    0 0 12px rgba(0, 212, 255, 0.65),
+    0 0 28px rgba(0, 180, 255, 0.45),
+    0 0 48px rgba(0, 102, 255, 0.28),
+    0 4px 16px rgba(0, 136, 255, 0.35);
+  --neon-transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.3s ease,
+    opacity 0.25s ease;
+}
+
+.btn-brand,
+.btn-neon {
+  background-image: var(--brand-gradient);
+  color: white;
+  box-shadow: var(--neon-shadow-rest);
+  transition: var(--neon-transition);
+  will-change: box-shadow, transform;
+}
+
+.btn-brand:hover:not(:disabled),
+.btn-neon:hover:not(:disabled) {
+  box-shadow: var(--neon-shadow-hover);
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.btn-brand:active:not(:disabled),
+.btn-neon:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--neon-shadow-rest);
+  transition-duration: 0.12s;
+}
+
+.btn-brand:focus-visible,
+.btn-neon:focus-visible {
+  outline: none;
+  box-shadow: var(--neon-shadow-hover), 0 0 0 3px rgba(0, 180, 255, 0.35);
+}
+
+.btn-brand:disabled,
+.btn-neon:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+  filter: none;
+  cursor: not-allowed;
+}
+
+/* Circular icon buttons (chat send, etc.) */
+.btn-neon-round {
+  background-image: var(--brand-gradient);
+  color: white;
+  box-shadow: var(--neon-shadow-rest);
+  transition: var(--neon-transition);
+}
+
+.btn-neon-round:hover:not(:disabled) {
+  box-shadow: var(--neon-shadow-hover);
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.08);
+}
+
+.btn-neon-round:active:not(:disabled) {
+  transform: translateY(0) scale(1);
+  transition-duration: 0.12s;
+}
+
+.btn-neon-round:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Active nav / tabs — electric blue (replaces old violet) */
+.dark .nav-active {
+  background-color: rgba(0, 180, 255, 0.14);
+  color: #e0f7ff;
+  box-shadow: inset 0 0 0 1px rgba(0, 180, 255, 0.35);
+}
+
+.dark .nav-active-icon {
+  color: #00d4ff;
 }

@@ -48,7 +48,7 @@ export function ClawContent() {
         <button
           type="button"
           onClick={() => setIngestOpen(true)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg btn-brand px-4 py-2.5 text-sm font-semibold text-white"
         >
           <span className="text-lg leading-none">+</span>
           Test Ingest
@@ -156,7 +156,7 @@ function StatCard({
   const valueStyles = {
     muted: "text-slate-700 dark:text-slate-200",
     amber: "text-amber-600 dark:text-amber-400",
-    violet: "text-violet-600 dark:text-violet-400",
+    violet: "text-[#00b4ff] dark:text-[#38bdf8]",
     green: "text-emerald-600 dark:text-emerald-400",
   };
   return (
@@ -209,7 +209,7 @@ function ChannelCard({ channel }: { channel: ClawChannel }) {
             "mt-4 w-full rounded-lg px-3 py-2 text-sm font-medium transition",
             connected
               ? "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-white/15 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:bg-white/[0.08]"
-              : "bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] font-semibold text-white shadow-md shadow-[#5b6cff]/20 hover:opacity-95",
+              : "btn-brand font-semibold text-white",
           ].join(" ")}
         >
           {connected ? "Manage" : "Connect"}

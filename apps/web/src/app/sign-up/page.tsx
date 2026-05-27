@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <div className="relative flex min-h-dvh items-center justify-center bg-slate-100 px-4 py-10 dark:bg-[#070b14]">
+    <div className="app-canvas relative flex min-h-dvh items-center justify-center bg-slate-100 px-4 py-10">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>

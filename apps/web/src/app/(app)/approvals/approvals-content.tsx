@@ -110,7 +110,7 @@ export function ApprovalsContent() {
           type="button"
           onClick={approveAllSafe}
           disabled={!queue.some((q) => q.safeToBulkApprove)}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#5b6cff] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-brand inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed"
         >
           <IconShield />
           Approve All Safe
@@ -142,7 +142,7 @@ export function ApprovalsContent() {
             >
               <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 px-5 py-4 dark:border-white/[0.06]">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#00b4ff]/10 text-[#00b4ff] dark:bg-[#00b4ff]/15 dark:text-[#7dd3fc]">
                     <IconRobotSm />
                   </div>
                   <div>
@@ -220,7 +220,7 @@ function FilterChip({
       className={[
         "rounded-full px-3 py-1.5 text-xs font-medium transition",
         active
-          ? "bg-violet-600/15 text-violet-700 ring-1 ring-violet-500/30 dark:bg-violet-600/25 dark:text-violet-200"
+          ? "bg-[#00b4ff]/15 text-[#0088ff] ring-1 ring-[#00b4ff]/30 dark:bg-[#00b4ff]/20 dark:text-[#bae6fd]"
           : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-white/[0.06] dark:text-slate-400 dark:hover:bg-white/[0.1]",
       ].join(" ")}
     >

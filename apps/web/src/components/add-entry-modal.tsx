@@ -163,7 +163,7 @@ export function AddEntryModal({
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#5b6cff]/20 hover:opacity-95"
+              className="rounded-lg btn-brand px-4 py-2 text-sm font-semibold text-white"
             >
               {submitLabel}
             </button>

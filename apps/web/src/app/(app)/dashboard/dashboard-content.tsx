@@ -62,7 +62,7 @@ export function DashboardContent() {
           label="Tasks today"
           value="0"
           icon={<IconBolt />}
-          iconWrap="from-violet-500/30 to-purple-600/20 text-violet-600 dark:text-violet-300 shadow-[0_0_24px_rgba(139,92,246,0.25)]"
+          iconWrap="from-[#00b4ff]/35 to-[#0066ff]/20 text-[#00b4ff] dark:text-[#7dd3fc] shadow-[0_0_24px_rgba(0,180,255,0.3)]"
         />
         <StatCard
           label="Awaiting approval"
@@ -101,7 +101,7 @@ export function DashboardContent() {
             </div>
             <Link
               href="/approvals"
-              className="text-xs font-medium text-violet-600 hover:text-violet-500 dark:text-violet-400 dark:hover:text-violet-300"
+              className="text-xs font-medium text-[#00b4ff] hover:text-[#0ea5e9] dark:text-[#38bdf8] dark:hover:text-[#7dd3fc]"
             >
               View all
             </Link>
@@ -113,11 +113,11 @@ export function DashboardContent() {
                 className={[
                   "flex items-center gap-3 rounded-xl border p-4 transition-colors",
                   row.selected
-                    ? "border-violet-500/50 bg-violet-500/[0.07] shadow-[0_0_0_1px_rgba(139,92,246,0.15)] dark:bg-violet-500/[0.07]"
-                    : "border-slate-200 bg-white hover:border-slate-300 dark:border-white/[0.08] dark:bg-[#0e131d] dark:hover:border-white/[0.12]",
+                    ? "border-[#00b4ff]/50 bg-[#00b4ff]/[0.08] shadow-[0_0_0_1px_rgba(0,180,255,0.2)] dark:bg-[#00b4ff]/[0.08]"
+                    : "border-slate-200 bg-white hover:border-slate-300 dark:border-white/[0.08] app-card dark:hover:border-white/[0.12]",
                 ].join(" ")}
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-500/10 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00b4ff]/10 text-[#00b4ff] dark:bg-[#00b4ff]/15 dark:text-[#7dd3fc]">
                   <IconBolt />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -133,7 +133,7 @@ export function DashboardContent() {
         </section>
 
         <div className="flex flex-col gap-6 lg:col-span-5 xl:col-span-4">
-          <section className="rounded-xl border border-slate-200 bg-white dark:border-white/[0.08] dark:bg-[#0e131d]">
+          <section className="rounded-xl border border-slate-200 bg-white dark:border-white/[0.08] app-card">
             <div className="border-b border-slate-100 px-4 py-3 dark:border-white/[0.08]">
               <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
                 Needs your approval
@@ -172,14 +172,14 @@ export function DashboardContent() {
             </ul>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white dark:border-white/[0.08] dark:bg-[#0e131d]">
+          <section className="rounded-xl border border-slate-200 bg-white dark:border-white/[0.08] app-card">
             <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-white/[0.08]">
               <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
                 Worker status
               </h2>
               <Link
                 href="/workers"
-                className="shrink-0 text-xs font-medium text-violet-600 hover:text-violet-500 dark:text-violet-400 dark:hover:text-violet-300"
+                className="shrink-0 text-xs font-medium text-[#00b4ff] hover:text-[#0ea5e9] dark:text-[#38bdf8] dark:hover:text-[#7dd3fc]"
               >
                 Configure
               </Link>
@@ -227,7 +227,7 @@ function StatCard({
   iconWrap: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-white/[0.08] dark:bg-[#0e131d]">
+    <div className="app-card rounded-xl border border-slate-200 bg-white p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-medium text-slate-500">{label}</p>

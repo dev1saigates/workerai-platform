@@ -83,7 +83,7 @@ export function WorkspacePanel() {
           setSaved(true);
           window.setTimeout(() => setSaved(false), 2500);
         }}
-        className="mt-8 rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#5b6cff]/25 hover:opacity-95"
+        className="mt-8 rounded-lg btn-brand px-5 py-2.5 text-sm font-semibold text-white"
       >
         Save Changes
       </button>
@@ -149,13 +149,13 @@ export function ProfilePanel() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-violet-500 to-indigo-600 text-xl font-semibold text-white">
+            <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#00b4ff] to-[#0066ff] text-xl font-semibold text-white">
               {initials}
             </span>
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          <label className="inline-flex cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#5b6cff]/20 hover:opacity-95">
+          <label className="inline-flex cursor-pointer items-center justify-center rounded-lg btn-brand px-4 py-2 text-sm font-semibold text-white">
             Change photo
             <input
               type="file"
@@ -318,7 +318,7 @@ function IntegrationRow({
           "shrink-0 rounded-lg px-4 py-2 text-xs font-semibold transition",
           connected
             ? "border border-slate-300 text-slate-700 hover:bg-slate-50 dark:border-white/15 dark:text-slate-200"
-            : "bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] text-white hover:opacity-95",
+            : "btn-brand text-white",
         ].join(" ")}
       >
         {connected ? "Disconnect" : "Connect"}
@@ -391,7 +391,7 @@ export function BillingPanel() {
             className={[
               "flex flex-col rounded-xl border p-5",
               plan.current
-                ? "border-violet-500/40 ring-1 ring-violet-500/25 dark:bg-white/[0.04]"
+                ? "border-[#00b4ff]/40 ring-1 ring-[#00b4ff]/25 dark:bg-white/[0.04]"
                 : "border-slate-200/80 dark:border-white/[0.08] dark:bg-white/[0.03]",
             ].join(" ")}
           >
@@ -416,7 +416,7 @@ export function BillingPanel() {
                 "mt-6 w-full rounded-lg py-2.5 text-sm font-semibold transition",
                 plan.current
                   ? "cursor-default bg-slate-200 text-slate-500 dark:bg-white/10 dark:text-slate-400"
-                  : "bg-gradient-to-r from-[#5b6cff] to-[#7c3aed] text-white hover:opacity-95",
+                  : "btn-brand text-white",
               ].join(" ")}
             >
               {plan.current ? "Current plan" : "Upgrade"}
@@ -464,7 +464,7 @@ export function AuditPanel() {
 function AuditRow({ row }: { row: AuditEvent }) {
   return (
     <tr className="border-b border-slate-100 last:border-0 dark:border-white/[0.04]">
-      <td className="px-4 py-3 font-mono text-xs text-violet-600 dark:text-violet-300">
+      <td className="px-4 py-3 font-mono text-xs text-[#00b4ff] dark:text-[#7dd3fc]">
         {row.action}
       </td>
       <td className="px-4 py-3">
