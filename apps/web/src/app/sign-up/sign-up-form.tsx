@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { registerAccount } from "@/lib/auth-api";
 import { z } from "zod";
 
 const passwordRule = z
@@ -47,12 +48,19 @@ export function SignUpForm() {
 
   async function onSubmit(data: SignUpValues) {
     setServerMessage(null);
-    await new Promise((r) => setTimeout(r, 400));
-    console.log("Sign-up payload (wire to API next):", data);
-    setServerMessage(
-      "Demo only: add your API call here. Redirecting to dashboard…",
-    );
-    router.push("/dashboard");
+    try {
+      await registerAccount({
+        fullName: data.fullName,
+        companyName: data.companyName,
+        email: data.email,
+        password: data.password,
+      });
+      router.push("/dashboard");
+    } catch (err) {
+      setServerMessage(
+        err instanceof Error ? err.message : "Could not create account.",
+      );
+    }
   }
 
   const inputClass =
@@ -62,7 +70,7 @@ export function SignUpForm() {
     <div className="w-full max-w-[480px] rounded-2xl border border-white/10 bg-[#0f1523] p-8 shadow-2xl shadow-black/40">
       <div className="mb-8 flex items-start gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#3b5bfd] text-lg font-bold text-white">
-         ved
+          W
         </div>
         <div>
           <p className="text-lg font-semibold tracking-tight text-white">

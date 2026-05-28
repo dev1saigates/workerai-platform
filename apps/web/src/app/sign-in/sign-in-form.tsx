@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { loginAccount } from "@/lib/auth-api";
 import { z } from "zod";
 
 const signInSchema = z.object({
@@ -33,13 +34,17 @@ export function SignInForm() {
 
   async function onSubmit(data: SignInValues) {
     setServerMessage(null);
-
-    await new Promise((r) => setTimeout(r, 400));
-    console.log("Sign-in payload(wire to API next):", data);
-    setServerMessage(
-      "Demo only:add your API call here. Redirecting to dashboard...",
-    );
-    router.push("/dashboard");
+    try {
+      await loginAccount({
+        email: data.email,
+        password: data.password,
+      });
+      router.push("/dashboard");
+    } catch (err) {
+      setServerMessage(
+        err instanceof Error ? err.message : "Could not sign in.",
+      );
+    }
   }
   return (
     <div className="app-panel-solid w-full max-w-[440px] rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50 dark:shadow-2xl dark:shadow-[#00b4ff]/10">

@@ -1,252 +1,117 @@
 # WorkerAI — Project status
 
-**Last updated:** 23 May 2026
+**Last updated:** 28 May 2026
 
 | Symbol | Meaning |
 |:------:|---------|
 | ✅ | Done |
-| ⬜ | Remaining |
+| 🟡 | In progress |
+| ⬜ | Not started |
+
+> **Handover doc:** [HANDOVER.md](../HANDOVER.md) — setup, env, API routes, folder map.
 
 ---
 
-## Progress overview
+## Overall progress
 
-| Phase | Progress | Status |
-|-------|----------|--------|
-| **Phase 1** — Setup & monorepo | `████████░░` **80%** (8/10) | 🟡 In progress |
-| **Phase 2** — Frontend UI | `██████████` **100%** (13/13 screens) | ✅ Complete (polish remaining) |
-| **Phase 3** — Database (PostgreSQL) | `░░░░░░░░░░` **0%** (0/10) | ⬜ Not started |
-| **Phase 4** — Backend API | `░░░░░░░░░░` **0%** (0/17) | ⬜ Not started |
-| **Phase 5** — AI pipeline (vLLM) | `░░░░░░░░░░` **0%** (0/6) | ⬜ Not started |
-| **Phase 6** — Deploy & go-live | `░░░░░░░░░░` **0%** (0/5) | ⬜ Not started |
+```
+███████████████░░░░░░░░░░  ~60% complete
+```
+
+| Phase | What it covers | Progress | Status | Estimated finish |
+|-------|----------------|----------|--------|------------------|
+| **Phase 1** — Setup & monorepo | Repo, tooling, Docker, env | `█████████░` 90% | 🟡 Almost done | **29 May 2026** |
+| **Phase 2** — Frontend UI | All 13 screens | `█████████░` 95% | ✅ Built (polish left) | **3 Jun 2026** |
+| **Phase 3** — Database | Postgres, schema, RLS | `█████████░` 90% | 🟡 Almost done | **1 Jun 2026** |
+| **Phase 4** — Backend API | Auth + all modules | `███░░░░░░░` 35% | 🟡 Auth done | **17 Jun 2026** |
+| **Phase 5** — AI pipeline (vLLM) | Generation, streaming, embeddings | `░░░░░░░░░░` 0% | ⬜ Not started | **24 Jun 2026** |
+| **Phase 6** — Deploy & go-live | UK/EU hosting, security, UAT | `░░░░░░░░░░` 0% | ⬜ Not started | **8 Jul 2026** |
+
+*Dates are estimates and assume Mon–Fri work (weekends off).*
 
 ---
 
 ## Phase 1 — Setup & monorepo
+`█████████░` **90%** · Estimated finish: **29 May 2026**
 
 | | Task |
 |:-:|------|
+| ✅ | AI standards + UK/EU rules (`.cursorrules`) |
 | ✅ | pnpm monorepo (`apps/web`, `apps/api`, `packages`) |
 | ✅ | Next.js web app runs locally |
 | ✅ | Fastify API stub (port 4000) |
-| ✅ | Root `.gitignore` (no `node_modules` in Git) |
-| ✅ | GitHub push working |
-| ✅ | Shared app layout (`AppShell` — sidebar + header once) |
+| ✅ | `.gitignore` + GitHub push working |
+| ✅ | Shared app layout (`AppShell`) |
 | ✅ | Light / dark theme |
-| ⬜ | Docker Compose |
+| ✅ | Docker Compose + Postgres init |
+| ✅ | Env package (`packages/config` — Zod) |
 | ⬜ | CI pipeline (lint, typecheck, tests) |
-| ⬜ | Env package fully wired (`packages/config`) |
 
 ---
 
 ## Phase 2 — Frontend UI
+`█████████░` **95%** · Estimated finish: **3 Jun 2026** (screens built; final polish left)
 
-### Screens at a glance
-
-| Screen | Reference | Progress | Status |
-|--------|-----------|----------|--------|
-| Sign in | `signin.png` | 6/8 | 🟡 |
-| Sign up | `login.png` | 5/7 | 🟡 |
-| App shell | — | 5/6 | 🟡 |
-| Command Centre | `dashboard.png` | 5/7 | 🟡 |
-| Approvals | `approvals.png` | 6/9 | 🟡 |
-| AI Workers | `ai_workers.png` | 5/9 | 🟡 |
-| Task log | `task-log.png` | 3/4 | 🟡 |
-| Workflows | `workflows.png` | 3/4 | 🟡 |
-| Claw — Ingestion | `claw_ingestion.png` | 3/4 | 🟡 |
-| Knowledge hub | `knowledge_hub.png` | 3/4 | 🟡 |
-| Reports | `reports.png` | 3/4 | 🟡 |
-| Team | `team.png` | 3/4 | 🟡 |
-| Settings | `settings.png` | 3/4 | 🟡 |
-
----
-
-### 2.1 Auth pages
-
-#### Sign in
-
-| | Task |
+| | Screen |
 |:-:|------|
-| ✅ | Route `/sign-in` |
-| ✅ | Email + password + validation |
-| ✅ | Show / hide password |
-| ✅ | Logo + tagline + link to sign up |
-| ✅ | GDPR footer |
-| ⬜ | Light mode final pass |
-| ⬜ | Connect to real login API |
-
-#### Sign up
-
-| | Task |
-|:-:|------|
-| ✅ | Route `/sign-up` |
-| ✅ | Full name + company + work email + password rules |
-| ✅ | Create workspace button + link to sign in |
-| ⬜ | Light mode final pass |
-| ⬜ | Connect to real register API |
-
----
-
-### 2.2 App shell
-
-| | Task |
-|:-:|------|
-| ✅ | Sidebar + nav groups (Main / Data & tools / Workspace) |
-| ✅ | Approvals badge (count) |
-| ✅ | User profile + logout |
-| ✅ | Mobile menu |
-| ✅ | Header (title, search, notifications, theme toggle) |
-| ⬜ | Active nav highlight on every route |
-
----
-
-### 2.3 Main screens
-
-#### Command Centre
-
-| | Task |
-|:-:|------|
-| ✅ | Route `/dashboard` |
-| ✅ | 4 metric cards |
-| ✅ | Live Activity list |
-| ✅ | Needs your approval widget |
-| ✅ | Worker status + Configure link |
-| ⬜ | Final spacing / colours vs reference |
-| ⬜ | Centre status pill text |
-
-#### Approvals queue
-
-| | Task |
-|:-:|------|
-| ✅ | Route `/approvals` |
-| ✅ | Heading + item count + Approve All Safe |
-| ✅ | Filters (All / Urgent) |
-| ✅ | Cards + JSON preview + Approve / Edit / Reject |
-| ⬜ | Reject reason dialog |
-| ⬜ | Edit draft modal |
-| ⬜ | Final spacing / colours vs reference |
-
-#### AI Workers
-
-| | Task |
-|:-:|------|
-| ✅ | Route `/workers` |
-| ✅ | Heading + count + Add Worker button |
-| ✅ | Worker card grid + stats row |
-| ✅ | Worker chat `/workers/[slug]` |
-| ⬜ | Green **Active** badge on cards |
-| ⬜ | **Stats** + **Config** footer (per reference) |
-| ⬜ | Remove Add Worker test alert |
-| ⬜ | Final spacing / colours vs reference |
-
-#### Task log
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | Heading + AI Generate / Create Task + filter pills |
-| ✅ | Task list + priority + status badges |
-| ⬜ | Pagination (when API wired) |
-
-#### Workflows
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | Heading + New Workflow + subtitle |
-| ✅ | Template cards (3) + Your workflows list |
-| ✅ | Trigger labels (EMAIL / MANUAL / CRM) + active badge + play/pause |
-| ⬜ | Final spacing / colours vs reference |
-
-#### Claw — Ingestion
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | Heading + stats + channel grid + Test Ingest |
-| ✅ | Webhook URL + Copy + recent ingestion list |
-| ⬜ | Final spacing / colours vs reference |
-
-#### Knowledge hub
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | Upload + document list + search |
-| ✅ | Stats row + status badges (indexed / processing / failed) |
-| ⬜ | Final spacing / colours vs reference |
-
-#### Reports
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | KPI tiles + charts + date range |
-| ✅ | Top workers table |
-| ⬜ | Final spacing / colours vs reference |
-
-#### Team
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | Member list + roles + invite |
-| ✅ | Remove member (UI-only) |
-| ⬜ | Final spacing / colours vs reference |
-
-#### Settings
-
-| | Task |
-|:-:|------|
-| ✅ | Build page (remove Coming soon) |
-| ✅ | Sub-nav + Workspace form (company, hours, timezone) |
-| ✅ | Placeholder tabs (Profile, Integrations, GDPR, Billing, Audit) |
-| ⬜ | Final spacing / colours vs reference |
+| ✅ | Sign in |
+| ✅ | Sign up |
+| ✅ | App shell (sidebar + header) |
+| ✅ | Command Centre / dashboard |
+| ✅ | Approvals queue |
+| ✅ | AI Workers + worker chat |
+| ✅ | Task log |
+| ✅ | Workflows |
+| ✅ | Claw — Ingestion |
+| ✅ | Knowledge hub |
+| ✅ | Reports |
+| ✅ | Team |
+| ✅ | Settings |
+| ⬜ | Final polish pass (spacing/colours, light mode, small dialogs) |
 
 ---
 
 ## Phase 3 — Database (PostgreSQL)
+`█████████░` **90%** · Estimated finish: **1 Jun 2026**
 
 | | Task |
 |:-:|------|
-| ⬜ | Docker Compose — Postgres 16 |
-| ⬜ | PostgreSQL running (local or UK/EU host) |
-| ⬜ | Extensions: `pgvector`, `pg_partman` |
-| ⬜ | Database roles (`workerai_owner`, `workerai_app`, `workerai_migrator`, `workerai_break_glass`) |
-| ⬜ | Row-Level Security (RLS) per workspace |
-| ⬜ | Drizzle schema (`packages/db`) |
-| ⬜ | First migration applied |
-| ⬜ | `DATABASE_URL` in environment |
-| ⬜ | API connects with `workerai_app` role |
-| ⬜ | Transaction helpers (`withWorkspaceTransaction`, etc.) |
+| ✅ | Docker Compose — Postgres 16 |
+| ✅ | Extensions + 4 database roles |
+| ✅ | Drizzle schema (users, workspaces, members) |
+| ✅ | Migrations + Row-Level Security (RLS) |
+| ✅ | API connects with `workerai_app` role |
+| ✅ | Transaction helpers (`withWorkspaceTransaction`, etc.) |
+| ⬜ | Audit log tables |
 
 ---
 
 ## Phase 4 — Backend API
+`███░░░░░░░` **35%** · Estimated finish: **17 Jun 2026**
 
 | | Task |
 |:-:|------|
-| ⬜ | Module structure (routes / service / repository / tests) |
-| ⬜ | Workspaces module |
-| ⬜ | Auth — register + login (Argon2id) + sessions |
+| ✅ | Auth module — `POST /auth/register`, `POST /auth/login` |
+| ✅ | Workspaces module — create workspace on register |
+| ✅ | Shared auth Zod schemas (`packages/shared`) |
+| ✅ | Argon2id passwords + JWT |
+| ✅ | Sign-in / sign-up wired to real API |
+| ⬜ | JWT middleware on protected routes |
 | ⬜ | Workers module |
-| ⬜ | Tasks module (lifecycle states) |
+| ⬜ | Tasks module |
 | ⬜ | Approvals module |
-| ⬜ | Audit log (hash chain, same DB transaction) |
-| ⬜ | Wire UI: sign-in |
-| ⬜ | Wire UI: sign-up |
-| ⬜ | Wire UI: dashboard |
-| ⬜ | Wire UI: approvals |
-| ⬜ | Wire UI: workers |
-| ⬜ | Remaining modules (billing, integrations, workflows, claw, drive, reports, team, settings, GDPR, API keys) |
+| ⬜ | Audit log (hash chain) |
+| ⬜ | Wire remaining UI (dashboard, approvals, workers…) to API |
+| ⬜ | Remaining modules (billing, integrations, etc.) |
 
 ---
 
 ## Phase 5 — AI pipeline (vLLM on DGX)
+`░░░░░░░░░░` **0%** · Estimated finish: **24 Jun 2026**
 
 | | Task |
 |:-:|------|
-| ⬜ | vLLM connection (`:8000` on DGX) |
+| ⬜ | vLLM connection |
 | ⬜ | Generation API (interactive + async) |
 | ⬜ | SSE streaming to browser |
 | ⬜ | Embeddings (Knowledge hub search) |
@@ -256,6 +121,7 @@
 ---
 
 ## Phase 6 — Deploy & go-live
+`░░░░░░░░░░` **0%** · Estimated finish: **8 Jul 2026**
 
 | | Task |
 |:-:|------|
@@ -264,3 +130,32 @@
 | ⬜ | Monitoring (Sentry EU, Better Stack DE) |
 | ⬜ | Security review (rate limits, secrets) |
 | ⬜ | Client UAT sign-off |
+
+---
+
+## Daily work log
+
+Day-by-day record from the work tracker (most recent at the bottom). Hours = time spent that day.
+
+| Date | What I did | Hours |
+|------|------------|-------|
+| 11 May | Set up project foundations: AI coding standards with UK/EU compliance, daily tracker, finalised approved tech stack, GitHub for code backup. | 4.5 |
+| 12 May | Monorepo set up with pnpm workspaces, Next.js 15 frontend scaffolded, backend folder ready, vLLM agreed as inference stack, model shortlist locked (Llama-3.1-70B-FP8 + Qwen2.5-72B-AWQ + bge-small-en-v1.5), UK/EU data residency confirmed for all dependencies. | 4 |
+| 13 May | Unblocked Git for GitHub (ignored root node_modules, fixed first commit), adjusted pnpm so esbuild / sharp / unrs-resolver builds are allowed, bootstrapped Fastify API with tsx dev tooling, added root dev scripts for web and api, lined up UI references + next steps for sign-in page. | 5 |
+| 14 May | Designed and built the main dashboard: navigation, business summary cards, live activity feed, approval preview, AI worker status sections. | 4 |
+| 15 May | Built the approval queue: detailed approval cards, JSON/task preview sections, action buttons, priority labels, dark mode UI enhancements. | 6 |
+| 18 May | Continued frontend work (sign-in / sign-up / app shell). | 4.5 |
+| 19 May | Built AI Workers module UI: worker profile cards, task statistics, approval rates, auto-execution indicators, configuration entry points. Attended client meeting on workflow requirements (related project). | 4 |
+| 20 May | Built the AI agents chat interface: agent-wise conversation flow, chat layout, message handling UI, iterative testing/refinement. | 5 |
+| 21 May | Built Workflows, Task Log, and Claw — Ingestion UIs from design references (filters, channel grid, webhook copy, mock data). Documented Claw webhook purpose for client (external JSON ingest → API → DB → ingestion list). | 5 |
+| 22 May | Built Knowledge Hub and Reports screens (upload/search/documents, KPIs, charts, date range, mock data). Updated project status doc — Phase 2 UI now 10/13 screens. | 4.5 |
+| 25 May | Completed all remaining UI screens — frontend now done, moving to backend phase. | 4 |
+| 26 May | Enhanced AI communication to be more natural and human-like, added semi-realistic avatars, implemented the electric blue theme, integrated a microphone for voice interaction. | 5 |
+| 27 May | Database day: Docker Postgres, Drizzle schema, migrations, Row-Level Security (RLS), transaction helpers, `GET /health/db`. | — |
+| 28 May | Backend API day: auth module (register/login, Argon2id, JWT), workspaces module, shared Zod schemas, wired sign-in/sign-up to real API, wrote handover doc. | — |
+
+*23–24 May = weekend (off).*
+
+---
+
+*How to update: tick a task ✅ when done; change the phase status and "estimated finish" if a phase slips. Add a new row to the daily log each working day.*

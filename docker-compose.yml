@@ -1,0 +1,25 @@
+# WorkerAI local development stack (UK/EU production uses hosted Postgres later).
+# Step 1: Postgres only. Redis / vLLM added in later phases.
+
+services:
+  postgres:
+    build: ./docker/postgres
+    image: workerai-postgres:pg16-local
+    container_name: workerai-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: workerai_dev_local_only
+      POSTGRES_DB: workerai
+    volumes:
+      - workerai_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d workerai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  workerai_postgres_data:
