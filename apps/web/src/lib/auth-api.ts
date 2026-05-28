@@ -40,10 +40,19 @@ async function postJson<T>(
     body: JSON.stringify(body),
   });
 
-  const json = (await res.json()) as ApiSuccess<T> | ApiError;
+  let json: ApiSuccess<T> | ApiError;
+  try {
+    json = (await res.json()) as ApiSuccess<T> | ApiError;
+  } catch {
+    throw new Error(
+      res.ok
+        ? "Invalid response from server"
+        : `Server error (${res.status}). Is the API running on ${API_BASE}?`,
+    );
+  }
 
   if (!json.success) {
-    throw new Error(json.error?.message ?? "Request failed");
+    throw new Error(json.error?.message ?? `Request failed (${res.status})`);
   }
 
   return json;

@@ -6,6 +6,21 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginAccount } from "@/lib/auth-api";
+import {
+  authBrandSubtitle,
+  authBrandTitle,
+  authCard,
+  authEyeButton,
+  authFieldError,
+  authFooter,
+  authHeading,
+  authInput,
+  authLabel,
+  authLink,
+  authMuted,
+  authServerMessage,
+  brandCta,
+} from "@/lib/brand";
 import { z } from "zod";
 
 const signInSchema = z.object({
@@ -47,26 +62,21 @@ export function SignInForm() {
     }
   }
   return (
-    <div className="app-panel-solid w-full max-w-[440px] rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/50 dark:shadow-2xl dark:shadow-[#00b4ff]/10">
+    <div className={`${authCard} max-w-[440px]`}>
       <div className="mb-8 flex items-start gap-3">
         <div className="brand-gradient flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-lg font-bold text-white shadow-[0_0_20px_rgba(0,180,255,0.4)]">
           W
         </div>
         <div>
-          <p className="text-lg font-semibold tracking-tight text-white">
-            WorkerAI
-          </p>
-          <p className="text-sm text-slate-400">Your AI workforce platform</p>
+          <p className={authBrandTitle}>WorkerAI</p>
+          <p className={authBrandSubtitle}>Your AI workforce platform</p>
         </div>
       </div>
-      <h1 className="text-2xl font-semibold text-white">Sign in</h1>
-      <p className="mt-1 text-sm text-slate-400">Access your AI workspace.</p>
+      <h1 className={authHeading}>Sign in</h1>
+      <p className={`mt-1 ${authMuted}`}>Access your AI workspace.</p>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
         <div>
-          <label
-            htmlFor="email"
-            className="mb-1.5 block text-sm font-medium text-white"
-          >
+          <label htmlFor="email" className={authLabel}>
             Work email
           </label>
           <input
@@ -74,18 +84,15 @@ export function SignInForm() {
             type="email"
             autoComplete="email"
             placeholder="you@company.com"
-            className="w-full rounded-lg border border-white/10 bg-[#151c2e] px-3 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#00b4ff]/50 focus:ring-[#00b4ff]/25"
+            className={authInput}
             {...register("email")}
           />
           {errors.email && (
-            <p className="mt-1 text-xs text-rose-400">{errors.email.message}</p>
+            <p className={authFieldError}>{errors.email.message}</p>
           )}
         </div>
         <div>
-          <label
-            htmlFor="password"
-            className="mb-1.5 block text-sm font-medium text-white"
-          >
+          <label htmlFor="password" className={authLabel}>
             Password
           </label>
           <div className="relative">
@@ -94,45 +101,40 @@ export function SignInForm() {
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="••••••••"
-              className="w-full rounded-lg border border-white/10 bg-[#151c2e] py-2.5 pr-11 pl-3 text-sm text-white placeholder:text-slate-500 outline-none ring-2 ring-transparent transition focus:border-[#00b4ff]/50 focus:ring-[#00b4ff]/25"
+              className={`${authInput} pr-11`}
               {...register("password")}
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-1.5 text-slate-400 hover:bg-white/5 hover:text-white"
+              className={authEyeButton}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               <EyeIcon open={showPassword} />
             </button>
           </div>
           {errors.password && (
-            <p className="mt-1 text-xs text-rose-400">
-              {errors.password.message}
-            </p>
+            <p className={authFieldError}>{errors.password.message}</p>
           )}
         </div>
         {serverMessage && (
-          <p className="text-center text-xs text-slate-300">{serverMessage}</p>
+          <p className={authServerMessage}>{serverMessage}</p>
         )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center rounded-lg btn-brand py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+          className={`flex w-full rounded-lg py-3 text-sm ${brandCta} disabled:cursor-not-allowed disabled:opacity-60`}
         >
           {isSubmitting ? "Signing in…" : "Sign in"}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-slate-400">
+      <p className={`mt-6 text-center ${authMuted}`}>
         Don&apos;t have an account?{" "}
-        <Link
-          href="/sign-up"
-          className="font-medium text-[#7ab6ff] hover:underline"
-        >
+        <Link href="/sign-up" className={authLink}>
           Get started free
         </Link>
       </p>
-      <p className="mt-8 text-center text-[11px] leading-relaxed text-slate-500">
+      <p className={`mt-8 text-center ${authFooter}`}>
         By signing in you agree to our Terms of Service and Privacy Policy. UK
         GDPR compliant.
       </p>

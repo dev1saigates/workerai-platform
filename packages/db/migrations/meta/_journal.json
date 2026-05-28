@@ -29,6 +29,20 @@
       "when": 1779987300000,
       "tag": "0003_users_default_workspace",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779995100000,
+      "tag": "0004_rls_split_tenant_policies",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1779995200000,
+      "tag": "0005_bootstrap_signup_functions",
+      "breakpoints": true
     }
   ]
 }

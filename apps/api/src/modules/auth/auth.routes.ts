@@ -56,5 +56,25 @@ function handleAuthError(
     });
   }
 
+  const pgCode =
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    typeof (err as { code: unknown }).code === "string"
+      ? (err as { code: string }).code
+      : null;
+
+  if (pgCode === "42501") {
+    return reply.status(503).send({
+      success: false,
+      error: {
+        code: "DATABASE_POLICY_ERROR",
+        message:
+          "Could not create workspace (database security policy). Run pnpm db:migrate and try again.",
+        status: 503,
+      },
+    });
+  }
+
   throw err;
 }
