@@ -87,6 +87,7 @@
 | ✅ | Signup RLS fix (bootstrap functions migration) |
 | ✅ | API connects with `workerai_app` role |
 | ✅ | Transaction helpers (`withWorkspaceTransaction`, etc.) |
+| ✅ | `ai_workers` table + migration + RLS |
 | ⬜ | Audit log tables |
 
 ---
@@ -105,6 +106,7 @@
 | ✅ | Web route guard (`AuthGuard` / `GuestGuard`) + logout |
 | ✅ | Workers module — CRUD API + `ai_workers` table |
 | ✅ | Workers UI wired to API (list, create, chat by slug) |
+| ✅ | Add Worker modal — full create fields (emoji, tone, description, system prompt) |
 | ⬜ | Tasks module |
 | ⬜ | Approvals module |
 | ⬜ | Audit log (hash chain) |
@@ -160,7 +162,7 @@ Day-by-day record from the work tracker (most recent at the bottom). Hours = tim
 | 26 May | Enhanced AI communication to be more natural and human-like, added semi-realistic avatars, implemented the electric blue theme, integrated a microphone for voice interaction. | 5 |
 | 27 May | Database day: Docker Postgres, Drizzle schema, migrations, Row-Level Security (RLS), transaction helpers, `GET /health/db`. | — |
 | 28 May | Backend API day: auth module (register/login, Argon2id, JWT), workspaces module, shared Zod schemas, wired sign-in/sign-up to real API, wrote handover doc. | — |
-| 29 May | CI workflow + Vitest; API `auth-guard`; signup RLS migration fix; `integrations-and-keys.md`; sign-in light mode; web `AuthGuard` + logout; sidebar shows real session. | — |
+| 29 May | CI workflow + Vitest; API `auth-guard`; signup RLS migration fix; `integrations-and-keys.md`; sign-in light mode; web `AuthGuard` + logout; sidebar shows real session. Workers module end-to-end: `ai_workers` table + CRUD API; workers list/create/chat wired to API; Add Worker modal with emoji, tone, description, system prompt. | 8 |
 
 *23–24 May = weekend (off).*
 
