@@ -12,7 +12,7 @@ WorkerAI is a **multi-tenant** platform: each customer is a **workspace** (tenan
 
 | Layer | Tech | Folder |
 |--------|------|--------|
-| Frontend | Next.js 15/16, React, Tailwind v4 | `apps/web` |
+| Frontend | Next.js 16.2.6, React, Tailwind v4 | `apps/web` |
 | API | Node 22, Fastify, TypeScript | `apps/api` |
 | Database | PostgreSQL 16 + pgvector (Docker locally) | `packages/db` |
 | Shared validation | Zod schemas | `packages/shared` |
@@ -113,7 +113,9 @@ pnpm dev:web
 | `pnpm docker:reset` | **Deletes DB volume** + recreates |
 | `pnpm db:migrate` | Apply SQL migrations |
 | `pnpm db:generate` | Generate new migration from Drizzle schema |
-| `pnpm build` | Production build of web only |
+| `pnpm test` | Vitest (API unit tests) |
+| `pnpm typecheck` | TypeScript check all packages |
+| `pnpm lint` | ESLint on web app |
 
 ---
 
@@ -159,6 +161,10 @@ Each feature should live under `apps/api/src/modules/<name>/`:
 
 **Rule:** Never call `db.transaction()` directly — use `withWorkspaceTransaction`, `withPublicTransaction`, or `withSystemTransaction` from `apps/api/src/infra/db/index.ts`.
 
+**Tests:** Co-located `*.test.ts` next to source (e.g. `apps/api/src/lib/slug.test.ts`). Run all: `pnpm test` from repo root. Cross-cutting tests can live in `modules/__tests__/` when needed.
+
+**Protected routes:** Use `requireAuth` from `apps/api/src/lib/auth-guard.ts` as a Fastify `preHandler`. Sets `request.userId`, `request.userEmail`, `request.workspaceId` from the JWT.
+
 ---
 
 ## 7. API routes
@@ -188,12 +194,23 @@ Each feature should live under `apps/api/src/modules/<name>/`:
 |--------|------|------|----------------|
 | POST | `/auth/register` | `fullName`, `companyName`, `email`, `password` | `{ token, user, workspace }` |
 | POST | `/auth/login` | `email`, `password` | `{ token, user, workspace }` |
+| GET | `/auth/me` | Bearer JWT | `{ user, workspaceId }` |
 
 **Password rules (register):** min 8 chars, 1 uppercase, 1 number.
 
 **Token:** JWT (HS256), 7-day expiry. Stored in browser `localStorage` key `workerai:session` (demo — move to httpOnly cookie for production).
 
 **Register flow (database):** One transaction creates `users` → `workspaces` → `workspace_members` (role `owner`) → sets `users.default_workspace_id`.
+
+### Workers (implemented)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/workers` | Bearer JWT | List workers in workspace |
+| POST | `/workers` | Bearer JWT | Create worker |
+| GET | `/workers/:slug` | Bearer JWT | Get one worker |
+| PATCH | `/workers/:slug` | Bearer JWT | Update worker |
+| DELETE | `/workers/:slug` | Bearer JWT | Delete worker |
 
 ### Not implemented yet (UI only / mock)
 

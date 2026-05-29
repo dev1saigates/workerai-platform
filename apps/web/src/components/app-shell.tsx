@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { APPROVALS_BADGE_COUNT, getPageTitle } from "@/lib/app-nav";
+import { getStoredSession, logout } from "@/lib/auth-api";
 import {
   ONBOARDING_EVENT,
-  WORKERS,
   getOnboardingOverrides,
   type Worker,
 } from "@/lib/workers-data";
+import { fetchWorkers } from "@/lib/workers-api";
 import {
   IconBell,
   IconBook,
@@ -36,9 +37,19 @@ import { ThemeToggle } from "./theme-toggle";
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const activePath = pathname;
   const title = getPageTitle(pathname);
   const [mobileNav, setMobileNav] = useState(false);
+  const session = getStoredSession();
+  const user = session?.user;
+  const workspace = session?.workspace;
+  const initials = user ? nameInitials(user.fullName) : "??";
+
+  function handleLogout() {
+    logout();
+    router.replace("/sign-in");
+  }
 
   return (
     <div
@@ -72,9 +83,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <p className="mt-3 text-xs font-medium text-slate-600 dark:text-slate-300">
-            Innovate Digital Ltd
+            {workspace?.name ?? "Workspace"}
           </p>
-          <p className="text-[11px] text-slate-500">sarah@innovatedigital.co.uk</p>
+          <p className="text-[11px] text-slate-500">{user?.email ?? ""}</p>
         </div>
 
         <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-3 py-4">
@@ -136,20 +147,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="border-t border-slate-200 p-3 dark:border-white/[0.08]">
           <div className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-[#00b4ff]/8 dark:ring-1 dark:ring-[#00b4ff]/15">
             <div className="brand-gradient flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold text-white">
-              SW
+              {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">Sarah Wilson</p>
+              <p className="truncate text-sm font-medium">{user?.fullName ?? "User"}</p>
               <p className="text-xs text-slate-500">Owner</p>
             </div>
-            <Link
-              href="/sign-in"
+            <button
+              type="button"
               className="shrink-0 rounded-lg p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
               aria-label="Sign out"
-              onClick={() => setMobileNav(false)}
+              onClick={() => {
+                setMobileNav(false);
+                handleLogout();
+              }}
             >
               <IconLogout />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
@@ -222,6 +236,13 @@ function WorkersNav({
   const onWorkersRoute = activePath.startsWith("/workers");
   const [expanded, setExpanded] = useState(onWorkersRoute);
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
+  const [workers, setWorkers] = useState<Worker[]>([]);
+
+  useEffect(() => {
+    fetchWorkers()
+      .then(setWorkers)
+      .catch(() => setWorkers([]));
+  }, [activePath]);
 
   // Auto-expand whenever the user navigates onto any /workers route.
   useEffect(() => {
@@ -291,7 +312,7 @@ function WorkersNav({
 
       {expanded ? (
         <ul className="mt-1 ml-3 flex flex-col gap-0.5 border-l border-slate-200 pl-2 dark:border-white/[0.08]">
-          {WORKERS.map((w) => {
+          {workers.map((w) => {
             const onboarded = onboardedFor(w);
             const active = activePath === `/workers/${w.slug}`;
             return (
@@ -378,4 +399,12 @@ function NavItem({
       ) : null}
     </Link>
   );
+}
+
+function nameInitials(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    return `${parts[0]![0] ?? ""}${parts[parts.length - 1]![0] ?? ""}`.toUpperCase();
+  }
+  return fullName.slice(0, 2).toUpperCase();
 }

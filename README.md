@@ -23,4 +23,5 @@ pnpm dev:api            # terminal 1 → http://localhost:4000
 pnpm dev:web            # terminal 2 → http://localhost:3000
 ```
 
-**Progress tracker:** [docs/work-status/status.md](docs/work-status/status.md)
+**Progress tracker:** [docs/work-status/status.md](docs/work-status/status.md)  
+**Integrations & keys:** [docs/integrations-and-keys.md](docs/integrations-and-keys.md)
