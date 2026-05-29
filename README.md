@@ -3,7 +3,7 @@
 Multi-tenant SaaS for UK SMEs — AI drafts business content; humans approve before anything is sent.
 
 **Company:** Saigates Limited, Wolverhampton, UK  
-**Legal:** All production customer data must stay in the **UK or EU**.
+**Legal:** All production customer data must stay in the **UK**.
 
 ---
 
