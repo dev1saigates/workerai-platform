@@ -30,6 +30,16 @@ export function clearSession(): void {
   localStorage.removeItem(SESSION_KEY);
 }
 
+export function logout(): void {
+  clearSession();
+}
+
+export function getAuthHeaders(): Record<string, string> {
+  const session = getStoredSession();
+  if (!session?.token) return {};
+  return { Authorization: `Bearer ${session.token}` };
+}
+
 async function postJson<T>(
   path: string,
   body: unknown,

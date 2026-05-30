@@ -39,6 +39,7 @@ import {
   setOnboarded,
   type Worker,
 } from "@/lib/workers-data";
+import { markWorkerOnboarded } from "@/lib/workers-api";
 
 /**
  * WhatsApp-style chat for a single AI worker.
@@ -162,6 +163,9 @@ export function WorkerChat({ worker }: { worker: Worker }) {
         if (result.complete) {
           setOnboarded(worker.slug, true);
           setOnboardedState(true);
+          void markWorkerOnboarded(worker.slug).catch(() => {
+            /* local UI state already updated */
+          });
         }
 
         setMessages((prev) => [...prev, ...followUp]);

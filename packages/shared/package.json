@@ -5,7 +5,11 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./schemas/auth": "./src/schemas/auth.ts"
+    "./schemas/auth": "./src/schemas/auth.ts",
+    "./schemas/workers": "./src/schemas/workers.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "^4.4.3"

@@ -1,6 +1,6 @@
 # WorkerAI — Project status
 
-**Last updated:** 28 May 2026
+**Last updated:** 29 May 2026
 
 | Symbol | Meaning |
 |:------:|---------|
@@ -8,7 +8,8 @@
 | 🟡 | In progress |
 | ⬜ | Not started |
 
-> **Handover doc:** [HANDOVER.md](../HANDOVER.md) — setup, env, API routes, folder map.
+> **Handover doc:** [HANDOVER.md](../HANDOVER.md) — setup, env, API routes, folder map.  
+> **Integrations & keys:** [integrations-and-keys.md](../integrations-and-keys.md)
 
 ---
 
@@ -20,19 +21,19 @@
 
 | Phase | What it covers | Progress | Status | Estimated finish |
 |-------|----------------|----------|--------|------------------|
-| **Phase 1** — Setup & monorepo | Repo, tooling, Docker, env | `█████████░` 90% | 🟡 Almost done | **29 May 2026** |
+| **Phase 1** — Setup & monorepo | Repo, tooling, Docker, env | `██████████` 100% | ✅ Complete | **29 May 2026** |
 | **Phase 2** — Frontend UI | All 13 screens | `█████████░` 95% | ✅ Built (polish left) | **3 Jun 2026** |
 | **Phase 3** — Database | Postgres, schema, RLS | `█████████░` 90% | 🟡 Almost done | **1 Jun 2026** |
-| **Phase 4** — Backend API | Auth + all modules | `███░░░░░░░` 35% | 🟡 Auth done | **17 Jun 2026** |
+| **Phase 4** — Backend API | Auth + workers + modules | `█████░░░░░` 45% | 🟡 Workers live | **17 Jun 2026** |
 | **Phase 5** — AI pipeline (vLLM) | Generation, streaming, embeddings | `░░░░░░░░░░` 0% | ⬜ Not started | **24 Jun 2026** |
 | **Phase 6** — Deploy & go-live | UK/EU hosting, security, UAT | `░░░░░░░░░░` 0% | ⬜ Not started | **8 Jul 2026** |
 
-*Dates are estimates and assume Mon–Fri work (weekends off).*
+*Overall % is UI-screen-weighted (~60%); full backend + AI effort is closer to ~35–40%.*
 
 ---
 
 ## Phase 1 — Setup & monorepo
-`█████████░` **90%** · Estimated finish: **29 May 2026**
+`██████████` **100%** · Completed **29 May 2026**
 
 | | Task |
 |:-:|------|
@@ -45,7 +46,7 @@
 | ✅ | Light / dark theme |
 | ✅ | Docker Compose + Postgres init |
 | ✅ | Env package (`packages/config` — Zod) |
-| ⬜ | CI pipeline (lint, typecheck, tests) |
+| ✅ | CI pipeline (lint, typecheck, tests) |
 
 ---
 
@@ -67,7 +68,10 @@
 | ✅ | Reports |
 | ✅ | Team |
 | ✅ | Settings |
-| ⬜ | Final polish pass (spacing/colours, light mode, small dialogs) |
+| ✅ | Sign-in / sign-up light mode colours |
+| ✅ | Protected app routes (`AuthGuard` — redirect if not logged in) |
+| ✅ | Logout clears session; sidebar shows real user + workspace |
+| ⬜ | Final polish pass (spacing/colours, small dialogs) |
 
 ---
 
@@ -80,28 +84,33 @@
 | ✅ | Extensions + 4 database roles |
 | ✅ | Drizzle schema (users, workspaces, members) |
 | ✅ | Migrations + Row-Level Security (RLS) |
+| ✅ | Signup RLS fix (bootstrap functions migration) |
 | ✅ | API connects with `workerai_app` role |
 | ✅ | Transaction helpers (`withWorkspaceTransaction`, etc.) |
+| ✅ | `ai_workers` table + migration + RLS |
 | ⬜ | Audit log tables |
 
 ---
 
 ## Phase 4 — Backend API
-`███░░░░░░░` **35%** · Estimated finish: **17 Jun 2026**
+`█████░░░░░` **45%** · Estimated finish: **17 Jun 2026**
 
 | | Task |
 |:-:|------|
-| ✅ | Auth module — `POST /auth/register`, `POST /auth/login` |
+| ✅ | Auth module — `POST /auth/register`, `POST /auth/login`, `GET /auth/me` |
 | ✅ | Workspaces module — create workspace on register |
 | ✅ | Shared auth Zod schemas (`packages/shared`) |
 | ✅ | Argon2id passwords + JWT |
+| ✅ | API auth guard (`requireAuth` preHandler) |
 | ✅ | Sign-in / sign-up wired to real API |
-| ⬜ | JWT middleware on protected routes |
-| ⬜ | Workers module |
+| ✅ | Web route guard (`AuthGuard` / `GuestGuard`) + logout |
+| ✅ | Workers module — CRUD API + `ai_workers` table |
+| ✅ | Workers UI wired to API (list, create, chat by slug) |
+| ✅ | Add Worker modal — full create fields (emoji, tone, description, system prompt) |
 | ⬜ | Tasks module |
 | ⬜ | Approvals module |
 | ⬜ | Audit log (hash chain) |
-| ⬜ | Wire remaining UI (dashboard, approvals, workers…) to API |
+| ⬜ | Wire remaining UI (dashboard, approvals…) to API |
 | ⬜ | Remaining modules (billing, integrations, etc.) |
 
 ---
@@ -153,6 +162,7 @@ Day-by-day record from the work tracker (most recent at the bottom). Hours = tim
 | 26 May | Enhanced AI communication to be more natural and human-like, added semi-realistic avatars, implemented the electric blue theme, integrated a microphone for voice interaction. | 5 |
 | 27 May | Database day: Docker Postgres, Drizzle schema, migrations, Row-Level Security (RLS), transaction helpers, `GET /health/db`. | — |
 | 28 May | Backend API day: auth module (register/login, Argon2id, JWT), workspaces module, shared Zod schemas, wired sign-in/sign-up to real API, wrote handover doc. | — |
+| 29 May | CI workflow + Vitest; API `auth-guard`; signup RLS migration fix; `integrations-and-keys.md`; sign-in light mode; web `AuthGuard` + logout; sidebar shows real session. Workers module end-to-end: `ai_workers` table + CRUD API; workers list/create/chat wired to API; Add Worker modal with emoji, tone, description, system prompt. | 8 |
 
 *23–24 May = weekend (off).*
 

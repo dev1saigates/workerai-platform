@@ -4,10 +4,25 @@ import {
 } from "@workerai/shared/schemas/auth";
 import type { FastifyInstance } from "fastify";
 import { ZodError } from "zod";
+import { requireAuth } from "../../lib/auth-guard";
 import { AppError, isAppError } from "../../lib/errors";
 import { AuthService } from "./auth.service";
 
 export async function authRoutes(app: FastifyInstance) {
+  app.get(
+    "/auth/me",
+    { preHandler: requireAuth },
+    async (request) => ({
+      success: true,
+      data: {
+        user: {
+          id: request.userId,
+          email: request.userEmail,
+        },
+        workspaceId: request.workspaceId,
+      },
+    }),
+  );
   app.post("/auth/register", async (request, reply) => {
     try {
       const body = registerBodySchema.parse(request.body);

@@ -1,5 +1,3 @@
-import { findWorker } from "@/lib/workers-data";
-
 /** Header titles for each static app route (shown in the top bar). */
 export const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Command Centre",
@@ -14,6 +12,14 @@ export const PAGE_TITLES: Record<string, string> = {
   "/settings": "Settings",
 };
 
+function slugToTitle(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 /**
  * Build the header title from the current pathname.
  * Handles dynamic worker chat routes like `/workers/executive-assistant`.
@@ -23,8 +29,7 @@ export function getPageTitle(pathname: string): string {
 
   if (pathname.startsWith("/workers/")) {
     const slug = pathname.split("/")[2] ?? "";
-    const worker = findWorker(slug);
-    if (worker) return `Chat — ${worker.name}`;
+    if (slug) return `Chat — ${slugToTitle(slug)}`;
   }
 
   return "WorkerAI";
