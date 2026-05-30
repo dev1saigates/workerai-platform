@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkerAI — Project Tracker</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #22263a;
+      --border:    #2e3350;
+      --accent:    #3b82f6;
+      --accent2:   #6366f1;
+      --green:     #22c55e;
+      --amber:     #f59e0b;
+      --red:       #ef4444;
+      --muted:     #64748b;
+      --text:      #e2e8f0;
+      --subtext:   #94a3b8;
+      --p0:        #ef4444;
+      --p1:        #f97316;
+      --p2:        #eab308;
+    }
+    html { font-size: 15px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 0 0 4rem;
+    }
+
+    /* ── Layout ── */
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #12162a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .header-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .logo { display: flex; align-items: center; gap: 0.75rem; }
+    .logo-dot { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .logo-text h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+    .logo-text p { font-size: 0.8rem; color: var(--subtext); }
+    .header-meta { text-align: right; font-size: 0.8rem; color: var(--subtext); }
+    .header-meta strong { color: var(--text); }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--subtext);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    section { margin-bottom: 2.5rem; }
+
+    /* ── Overall progress card ── */
+    .progress-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .progress-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; }
+    .progress-headline { font-size: 1.5rem; font-weight: 700; }
+    .progress-headline span { color: var(--accent); }
+    .progress-note { font-size: 0.8rem; color: var(--amber); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); border-radius: 6px; padding: 0.35rem 0.75rem; display: inline-block; }
+    .bar-wrap { background: var(--surface2); border-radius: 99px; height: 12px; overflow: hidden; margin-bottom: 0.5rem; }
+    .bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s; }
+    .bar-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--subtext); }
+    .kpi-row { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .kpi { flex: 1; min-width: 130px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .kpi-val { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+    .kpi-label { font-size: 0.75rem; color: var(--subtext); margin-top: 0.25rem; }
+    .kpi.green .kpi-val { color: var(--green); }
+    .kpi.amber .kpi-val { color: var(--amber); }
+    .kpi.blue .kpi-val { color: var(--accent); }
+    .kpi.red .kpi-val { color: var(--red); }
+
+    /* ── Stream columns ── */
+    .streams { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    @media (max-width: 720px) { .streams { grid-template-columns: 1fr; } }
+    .stream-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+    }
+    .stream-label {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.3rem 0.75rem; border-radius: 99px; margin-bottom: 1rem;
+    }
+    .stream-label.dev { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .stream-label.coord { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); }
+    .stream-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .stream-sub { font-size: 0.8rem; color: var(--subtext); margin-bottom: 1.25rem; }
+
+    /* ── Phase cards ── */
+    .phases { display: flex; flex-direction: column; gap: 1rem; }
+    .phase {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .phase-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .phase-header:hover { background: var(--surface2); }
+    .phase-left { display: flex; align-items: center; gap: 0.75rem; }
+    .phase-num { width: 26px; height: 26px; border-radius: 7px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--subtext); flex-shrink: 0; }
+    .phase-name { font-size: 0.95rem; font-weight: 600; }
+    .phase-cover { font-size: 0.78rem; color: var(--subtext); }
+    .phase-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    .badge {
+      font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.6rem;
+      border-radius: 99px; white-space: nowrap;
+    }
+    .badge.done     { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .badge.wip      { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .badge.todo     { background: rgba(100,116,139,0.15);color: var(--subtext); border: 1px solid rgba(100,116,139,0.2); }
+    .phase-pct { font-size: 0.9rem; font-weight: 700; color: var(--accent); min-width: 3ch; text-align: right; }
+    .phase-mini-bar { width: 80px; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; flex-shrink: 0; }
+    .phase-mini-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .phase-body { border-top: 1px solid var(--border); padding: 1rem 1.25rem; }
+    .task-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .task-list li { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.83rem; }
+    .task-icon { flex-shrink: 0; margin-top: 0.05rem; }
+    .task-icon.done  { color: var(--green); }
+    .task-icon.wip   { color: var(--amber); }
+    .task-icon.todo  { color: var(--muted); }
+    .est { font-size: 0.72rem; color: var(--subtext); margin-top: 0.6rem; }
+
+    /* ── Backlog table ── */
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead { background: var(--surface2); }
+    th { padding: 0.75rem 1rem; text-align: left; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--subtext); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .p-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; }
+    .p-badge.P0 { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .p-badge.P1 { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+    .p-badge.P2 { background: rgba(234,179,8,0.15);  color: #facc15; border: 1px solid rgba(234,179,8,0.3); }
+    .type-badge { display: inline-block; font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; margin: 0.1rem; }
+    .type-badge.security { background: rgba(239,68,68,0.1);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+    .type-badge.backend  { background: rgba(59,130,246,0.1); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
+    .type-badge.infra    { background: rgba(99,102,241,0.1); color: #c4b5fd; border: 1px solid rgba(99,102,241,0.2); }
+    .type-badge.testing  { background: rgba(34,197,94,0.1);  color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
+    .type-badge.docs     { background: rgba(148,163,184,0.1);color: #cbd5e1; border: 1px solid rgba(148,163,184,0.2); }
+    .issue-title { font-weight: 600; }
+    .issue-body { color: var(--subtext); margin-top: 0.2rem; line-height: 1.45; }
+    .stream-dev   { font-size: 0.68rem; color: #60a5fa; }
+    .stream-coord { font-size: 0.68rem; color: #a5b4fc; }
+
+    /* ── Coordinator stream card items ── */
+    .coord-item { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.83rem; }
+    .coord-item:last-child { border-bottom: none; }
+    .ci { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; }
+    .ci.done  { background: rgba(34,197,94,0.2);  color: #4ade80; }
+    .ci.open  { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    .ci.todo  { background: rgba(100,116,139,0.2);color: var(--muted); }
+    .ci-label { font-weight: 600; }
+    .ci-note  { font-size: 0.75rem; color: var(--subtext); }
+
+    /* ── Footer ── */
+    footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding-top: 2rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+    .page-wrap footer { border-top: none; }
+
+    /* ── Legal chip ── */
+    .legal-chip { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 99px; padding: 0.3rem 0.9rem; font-size: 0.72rem; color: #4ade80; margin-top: 0.75rem; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HEADER ═══════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-dot">W</div>
+      <div class="logo-text">
+        <h1>WorkerAI Platform</h1>
+        <p>Project Tracker — Internal use only</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div><strong>Last updated:</strong> 29 May 2026</div>
+      <div>Builder: Saigates Limited, Wolverhampton</div>
+      <div class="legal-chip">🇬🇧 UK/EU data residency required in production</div>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ═══════════════════════════════════ OVERALL PROGRESS ═══════════════════════════════════ -->
+  <section>
+    <div class="section-title">Overall progress</div>
+    <div class="progress-card">
+      <div class="progress-header">
+        <div>
+          <div class="progress-headline">~<span>60%</span> complete — by UI screens</div>
+          <p style="font-size:0.82rem;color:var(--subtext);margin-top:0.35rem;">Real effort completion is approximately <strong style="color:var(--amber)">35–40%</strong> — the majority of backend work, AI pipeline, and deployment is not yet started.</p>
+        </div>
+        <div class="progress-note">⚠️ 60% = screens built, not effort</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-fill" style="width:60%"></div>
+      </div>
+      <div class="bar-labels"><span>0%</span><span>~60% by screens / ~35–40% by effort</span><span>100%</span></div>
+
+      <div class="kpi-row">
+        <div class="kpi green"><div class="kpi-val">13/13</div><div class="kpi-label">UI screens built</div></div>
+        <div class="kpi green"><div class="kpi-val">✓</div><div class="kpi-label">Auth API live (register + login)</div></div>
+        <div class="kpi amber"><div class="kpi-val">35%</div><div class="kpi-label">Backend API complete</div></div>
+        <div class="kpi red"><div class="kpi-val">0%</div><div class="kpi-label">AI pipeline (vLLM)</div></div>
+        <div class="kpi red"><div class="kpi-val">0%</div><div class="kpi-label">Production deploy</div></div>
+        <div class="kpi blue"><div class="kpi-val">10</div><div class="kpi-label">Open backlog issues</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ TWO STREAMS ═══════════════════════════════════ -->
+  <section>
+    <div class="section-title">Work streams</div>
+    <div class="streams">
+
+      <!-- DEVELOPER STREAM -->
+      <div class="stream-card">
+        <span class="stream-label dev">⚙️ By Developer</span>
+        <div class="stream-title">API · Database · Code</div>
+        <div class="stream-sub">All work inside apps/api/, packages/db/, and wiring UI to real data. Coordinator does NOT touch this.</div>
+
+        <div class="coord-item">
+          <span class="ci done">✓</span>
+          <div><div class="ci-label">Auth module — register &amp; login</div><div class="ci-note">Argon2id passwords, JWT, workspaces wired</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci done">✓</span>
+          <div><div class="ci-label">Database schema + Row-Level Security</div><div class="ci-note">Drizzle, Postgres 16, 4 DB roles, RLS enforced</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci done">✓</span>
+          <div><div class="ci-label">Transaction helpers</div><div class="ci-note">withWorkspaceTransaction, withPublicTransaction, etc.</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">JWT middleware (preHandler guard)</div><div class="ci-note">Issue #2 — P0 · blocks all protected routes</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Rate limiting + security headers</div><div class="ci-note">Issue #3 — P0 · @fastify/rate-limit + @fastify/helmet</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Workers, tasks, approvals API</div><div class="ci-note">Issue #6 — P0 · the core product loop</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Global Fastify error handler</div><div class="ci-note">Issue #5 — P1</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Hash-chained audit log</div><div class="ci-note">Issue #7 — P1 · same transaction as each state change</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Move token to httpOnly cookie</div><div class="ci-note">Issue #8 — P1 · currently in localStorage (XSS risk)</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Auth unit tests (jwt + password)</div><div class="ci-note">Issue #9 — P1</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">RLS tenant-isolation test</div><div class="ci-note">Issue #4 — P0 · must run as workerai_app role</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci todo">○</span>
+          <div><div class="ci-label">vLLM AI pipeline (Phase 5)</div><div class="ci-note">Not started — Llama-3.1-70B-FP8, SSE streaming, embeddings</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci todo">○</span>
+          <div><div class="ci-label">Production deploy — UK/EU (Phase 6)</div><div class="ci-note">Not started — AWS eu-west-2 or equivalent</div></div>
+        </div>
+      </div>
+
+      <!-- COORDINATOR STREAM -->
+      <div class="stream-card">
+        <span class="stream-label coord">📋 By Coordinator</span>
+        <div class="stream-title">Docs · Issues · Research · Testing</div>
+        <div class="stream-sub">Non-code work owned by the project coordinator with AI assistant support.</div>
+
+        <div class="coord-item">
+          <span class="ci done">✓</span>
+          <div><div class="ci-label">10 GitHub issues created from audit backlog</div><div class="ci-note">Issues #1–#10 with P0/P1/P2 and type labels</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Fix HANDOVER.md — pin Next.js version to 16.2.6</div><div class="ci-note">Issue #10 / docs branch PR — in progress</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">Fix status.md — clarify ~60% = screens not effort</div><div class="ci-note">Issue #10 / same docs branch PR — in progress</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci done">✓</span>
+          <div><div class="ci-label">Sonnet work log created (sonnet-log.md)</div><div class="ci-note">Running log of all AI-assistant tasks</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci done">✓</span>
+          <div><div class="ci-label">Project tracker page (this file)</div><div class="ci-note">tracker/index.html — ready for Cloudflare Pages</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci open">!</span>
+          <div><div class="ci-label">CI config draft (.github/workflows/ci.yml)</div><div class="ci-note">Issue #1 — chore/ci branch, labelled "developer must verify"</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci todo">○</span>
+          <div><div class="ci-label">UK/EU production hosting research brief</div><div class="ci-note">Task 5 — not yet started</div></div>
+        </div>
+        <div class="coord-item">
+          <span class="ci todo">○</span>
+          <div><div class="ci-label">Manual testing notes (UAT)</div><div class="ci-note">Phase 6 — not yet started</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ PHASE BREAKDOWN ═══════════════════════════════════ -->
+  <section>
+    <div class="section-title">Phase breakdown</div>
+    <div class="phases">
+
+      <!-- Phase 1 -->
+      <div class="phase">
+        <div class="phase-header">
+          <div class="phase-left">
+            <div class="phase-num">1</div>
+            <div>
+              <div class="phase-name">Setup &amp; monorepo</div>
+              <div class="phase-cover">Repo, tooling, Docker, env config</div>
+            </div>
+          </div>
+          <div class="phase-right">
+            <span class="badge wip">In progress</span>
+            <div class="phase-mini-bar"><div class="phase-mini-fill" style="width:90%"></div></div>
+            <div class="phase-pct">90%</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul class="task-list">
+            <li><span class="task-icon done">✅</span> AI standards + UK/EU rules (.cursorrules)</li>
+            <li><span class="task-icon done">✅</span> pnpm monorepo (apps/web, apps/api, packages)</li>
+            <li><span class="task-icon done">✅</span> Next.js 16.2.6 web app runs locally</li>
+            <li><span class="task-icon done">✅</span> Fastify API stub (port 4000)</li>
+            <li><span class="task-icon done">✅</span> .gitignore + GitHub push working</li>
+            <li><span class="task-icon done">✅</span> Shared app layout (AppShell)</li>
+            <li><span class="task-icon done">✅</span> Light / dark theme</li>
+            <li><span class="task-icon done">✅</span> Docker Compose + Postgres init</li>
+            <li><span class="task-icon done">✅</span> Env package (packages/config — Zod)</li>
+            <li><span class="task-icon todo">⬜</span> CI pipeline (lint, typecheck, tests) — <em>Issue #1 P0</em></li>
+          </ul>
+          <div class="est">🗓 Estimated finish: 29 May 2026</div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase">
+        <div class="phase-header">
+          <div class="phase-left">
+            <div class="phase-num">2</div>
+            <div>
+              <div class="phase-name">Frontend UI</div>
+              <div class="phase-cover">All 13 screens — Next.js 16.2.6, React 19, Tailwind v4</div>
+            </div>
+          </div>
+          <div class="phase-right">
+            <span class="badge done">Built</span>
+            <div class="phase-mini-bar"><div class="phase-mini-fill" style="width:95%"></div></div>
+            <div class="phase-pct">95%</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul class="task-list">
+            <li><span class="task-icon done">✅</span> Sign in / Sign up</li>
+            <li><span class="task-icon done">✅</span> App shell (sidebar + header)</li>
+            <li><span class="task-icon done">✅</span> Command Centre / Dashboard</li>
+            <li><span class="task-icon done">✅</span> Approvals queue</li>
+            <li><span class="task-icon done">✅</span> AI Workers + worker chat</li>
+            <li><span class="task-icon done">✅</span> Task log</li>
+            <li><span class="task-icon done">✅</span> Workflows</li>
+            <li><span class="task-icon done">✅</span> Claw — Ingestion</li>
+            <li><span class="task-icon done">✅</span> Knowledge hub</li>
+            <li><span class="task-icon done">✅</span> Reports</li>
+            <li><span class="task-icon done">✅</span> Team</li>
+            <li><span class="task-icon done">✅</span> Settings</li>
+            <li><span class="task-icon todo">⬜</span> Final polish pass (spacing, light mode, dialogs)</li>
+          </ul>
+          <p style="font-size:0.78rem;color:var(--amber);margin-top:0.75rem;">⚠️ All screens use <strong>mock data</strong> — only Sign in / Sign up hit the real API.</p>
+          <div class="est">🗓 Estimated finish: 3 Jun 2026</div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase">
+        <div class="phase-header">
+          <div class="phase-left">
+            <div class="phase-num">3</div>
+            <div>
+              <div class="phase-name">Database</div>
+              <div class="phase-cover">PostgreSQL 16 + pgvector, Drizzle ORM, Row-Level Security</div>
+            </div>
+          </div>
+          <div class="phase-right">
+            <span class="badge wip">Almost done</span>
+            <div class="phase-mini-bar"><div class="phase-mini-fill" style="width:90%"></div></div>
+            <div class="phase-pct">90%</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul class="task-list">
+            <li><span class="task-icon done">✅</span> Docker Compose — Postgres 16</li>
+            <li><span class="task-icon done">✅</span> Extensions + 4 database roles (app, owner, migrator, break_glass)</li>
+            <li><span class="task-icon done">✅</span> Drizzle schema (users, workspaces, members)</li>
+            <li><span class="task-icon done">✅</span> Migrations + Row-Level Security (RLS)</li>
+            <li><span class="task-icon done">✅</span> API connects with workerai_app role</li>
+            <li><span class="task-icon done">✅</span> Transaction helpers (withWorkspaceTransaction etc.)</li>
+            <li><span class="task-icon todo">⬜</span> Audit log tables — <em>Issue #7 P1</em></li>
+          </ul>
+          <div class="est">🗓 Estimated finish: 1 Jun 2026</div>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="phase">
+        <div class="phase-header">
+          <div class="phase-left">
+            <div class="phase-num">4</div>
+            <div>
+              <div class="phase-name">Backend API</div>
+              <div class="phase-cover">Fastify + TypeScript — auth done, modules remaining</div>
+            </div>
+          </div>
+          <div class="phase-right">
+            <span class="badge wip">Auth done</span>
+            <div class="phase-mini-bar"><div class="phase-mini-fill" style="width:35%"></div></div>
+            <div class="phase-pct">35%</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul class="task-list">
+            <li><span class="task-icon done">✅</span> Auth module — POST /auth/register, POST /auth/login</li>
+            <li><span class="task-icon done">✅</span> Workspaces module — create workspace on register</li>
+            <li><span class="task-icon done">✅</span> Shared auth Zod schemas (packages/shared)</li>
+            <li><span class="task-icon done">✅</span> Argon2id passwords + JWT (HS256, 7-day)</li>
+            <li><span class="task-icon done">✅</span> Sign-in / sign-up wired to real API</li>
+            <li><span class="task-icon todo">⬜</span> JWT middleware on protected routes — <em>Issue #2 P0</em></li>
+            <li><span class="task-icon todo">⬜</span> Rate limiting + security headers — <em>Issue #3 P0</em></li>
+            <li><span class="task-icon todo">⬜</span> Global error handler — <em>Issue #5 P1</em></li>
+            <li><span class="task-icon todo">⬜</span> Workers module (CRUD) — <em>Issue #6 P0</em></li>
+            <li><span class="task-icon todo">⬜</span> Tasks module (state machine) — <em>Issue #6 P0</em></li>
+            <li><span class="task-icon todo">⬜</span> Approvals module — <em>Issue #6 P0</em></li>
+            <li><span class="task-icon todo">⬜</span> Hash-chained audit log — <em>Issue #7 P1</em></li>
+            <li><span class="task-icon todo">⬜</span> Move token to httpOnly cookie — <em>Issue #8 P1</em></li>
+            <li><span class="task-icon todo">⬜</span> Wire remaining UI screens to API</li>
+            <li><span class="task-icon todo">⬜</span> Billing, integrations, remaining modules</li>
+          </ul>
+          <div class="est">🗓 Estimated finish: 17 Jun 2026</div>
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="phase">
+        <div class="phase-header">
+          <div class="phase-left">
+            <div class="phase-num">5</div>
+            <div>
+              <div class="phase-name">AI pipeline (vLLM)</div>
+              <div class="phase-cover">Self-hosted inference on DGX — Llama-3.1-70B-FP8 + Qwen2.5-72B-AWQ</div>
+            </div>
+          </div>
+          <div class="phase-right">
+            <span class="badge todo">Not started</span>
+            <div class="phase-mini-bar"><div class="phase-mini-fill" style="width:0%"></div></div>
+            <div class="phase-pct">0%</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul class="task-list">
+            <li><span class="task-icon todo">⬜</span> vLLM connection</li>
+            <li><span class="task-icon todo">⬜</span> Generation API (interactive + async)</li>
+            <li><span class="task-icon todo">⬜</span> SSE streaming to browser</li>
+            <li><span class="task-icon todo">⬜</span> Embeddings — bge-small-en-v1.5 (Knowledge hub search)</li>
+            <li><span class="task-icon todo">⬜</span> Background jobs (graphile-worker)</li>
+            <li><span class="task-icon todo">⬜</span> Quotas per workspace</li>
+          </ul>
+          <div class="est">🗓 Estimated finish: 24 Jun 2026</div>
+        </div>
+      </div>
+
+      <!-- Phase 6 -->
+      <div class="phase">
+        <div class="phase-header">
+          <div class="phase-left">
+            <div class="phase-num">6</div>
+            <div>
+              <div class="phase-name">Deploy &amp; go-live</div>
+              <div class="phase-cover">UK/EU hosting only — security review, UAT sign-off</div>
+            </div>
+          </div>
+          <div class="phase-right">
+            <span class="badge todo">Not started</span>
+            <div class="phase-mini-bar"><div class="phase-mini-fill" style="width:0%"></div></div>
+            <div class="phase-pct">0%</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <ul class="task-list">
+            <li><span class="task-icon todo">⬜</span> Production hosting (UK/EU only — AWS eu-west-2, Neon London, etc.)</li>
+            <li><span class="task-icon todo">⬜</span> HTTPS + reverse proxy (Caddy)</li>
+            <li><span class="task-icon todo">⬜</span> Monitoring (Sentry EU, Better Stack DE)</li>
+            <li><span class="task-icon todo">⬜</span> Security review (rate limits, secrets scan)</li>
+            <li><span class="task-icon todo">⬜</span> Client UAT sign-off</li>
+          </ul>
+          <p style="font-size:0.78rem;color:var(--red);margin-top:0.75rem;">🇬🇧 Legal constraint: all production customer data must stay in the UK or EU. No US-only services (e.g. Cloudflare R2, Resend) for customer data.</p>
+          <div class="est">🗓 Estimated finish: 8 Jul 2026</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ BACKLOG TABLE ═══════════════════════════════════ -->
+  <section>
+    <div class="section-title">Audit backlog — GitHub issues</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Type</th>
+            <th>Stream</th>
+            <th>Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>#1</strong></td>
+            <td class="issue-title">Add CI pipeline (lint, typecheck, test)</td>
+            <td><span class="p-badge P0">P0</span></td>
+            <td><span class="type-badge infra">infra</span></td>
+            <td><span class="stream-coord">Coordinator</span></td>
+            <td class="issue-body">No automated checks on PRs. GitHub Actions with Postgres 16 service. Developer must verify DB step.</td>
+          </tr>
+          <tr>
+            <td><strong>#2</strong></td>
+            <td class="issue-title">Build JWT authentication middleware</td>
+            <td><span class="p-badge P0">P0</span></td>
+            <td><span class="type-badge security">security</span> <span class="type-badge backend">backend</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">verifySessionToken exists but isn't enforced. Fastify preHandler guard — blocks all protected routes.</td>
+          </tr>
+          <tr>
+            <td><strong>#3</strong></td>
+            <td class="issue-title">Add rate limiting and security headers</td>
+            <td><span class="p-badge P0">P0</span></td>
+            <td><span class="type-badge security">security</span> <span class="type-badge backend">backend</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">No throttling on /auth/* — credential stuffing risk. @fastify/rate-limit + @fastify/helmet.</td>
+          </tr>
+          <tr>
+            <td><strong>#4</strong></td>
+            <td class="issue-title">Write RLS tenant-isolation test</td>
+            <td><span class="p-badge P0">P0</span></td>
+            <td><span class="type-badge testing">testing</span> <span class="type-badge security">security</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">Prove workspace A cannot read workspace B rows. Must run as workerai_app role (not superuser).</td>
+          </tr>
+          <tr>
+            <td><strong>#5</strong></td>
+            <td class="issue-title">Add global Fastify error handler</td>
+            <td><span class="p-badge P1">P1</span></td>
+            <td><span class="type-badge backend">backend</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">Error handling duplicated per-route. Single app.setErrorHandler for Zod / AppError / pg-42501.</td>
+          </tr>
+          <tr>
+            <td><strong>#6</strong></td>
+            <td class="issue-title">Build core domain: workers, tasks, approvals</td>
+            <td><span class="p-badge P0">P0</span></td>
+            <td><span class="type-badge backend">backend</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">The core product loop doesn't exist yet. DB tables + CRUD/state-machine APIs, wire mock UI screens.</td>
+          </tr>
+          <tr>
+            <td><strong>#7</strong></td>
+            <td class="issue-title">Add hash-chained audit log</td>
+            <td><span class="p-badge P1">P1</span></td>
+            <td><span class="type-badge backend">backend</span> <span class="type-badge security">security</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">audit_log table written in same transaction as each state change with hash chain for tamper-evidence.</td>
+          </tr>
+          <tr>
+            <td><strong>#8</strong></td>
+            <td class="issue-title">Move session token to httpOnly cookie</td>
+            <td><span class="p-badge P1">P1</span></td>
+            <td><span class="type-badge security">security</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">Token in localStorage is XSS-exfiltratable — flagged as demo-only. Must fix before real customer data.</td>
+          </tr>
+          <tr>
+            <td><strong>#9</strong></td>
+            <td class="issue-title">Add auth unit tests (jwt + password)</td>
+            <td><span class="p-badge P1">P1</span></td>
+            <td><span class="type-badge testing">testing</span></td>
+            <td><span class="stream-dev">Developer</span></td>
+            <td class="issue-body">No tests on security-critical auth code. jwt.ts (sign/verify/expiry) + password.ts + register→login integration test.</td>
+          </tr>
+          <tr>
+            <td><strong>#10</strong></td>
+            <td class="issue-title">Fix docs: pin Next.js version + clarify status %</td>
+            <td><span class="p-badge P2">P2</span></td>
+            <td><span class="type-badge docs">docs</span></td>
+            <td><span class="stream-coord">Coordinator</span></td>
+            <td class="issue-body">HANDOVER.md says "15/16" — real version is 16.2.6. status.md ~60% needs note: counted by screens not effort.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════ WHAT IS REAL ═══════════════════════════════════ -->
+  <section>
+    <div class="section-title">What is real vs. demo — important for reviewers</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Area</th><th>Status</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sign-in / Sign-up</td><td><span class="badge done">Real</span></td><td>Hits API + Postgres. Argon2id + JWT.</td></tr>
+          <tr><td>Dashboard, workers, tasks, approvals, settings</td><td><span class="badge wip">UI mock</span></td><td>Data lives in apps/web/src/lib/*-data.ts</td></tr>
+          <tr><td>Worker chat messages</td><td><span class="badge wip">Demo</span></td><td>Not vLLM yet</td></tr>
+          <tr><td>Onboarding in chat</td><td><span class="badge wip">Demo</span></td><td>localStorage only</td></tr>
+          <tr><td>Vercel deploy (apps/web)</td><td><span class="badge wip">Demo UI</span></td><td>No UK customer data until EU/UK backend live</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+<footer style="max-width:1100px;margin:2rem auto 0;padding:1.5rem;text-align:center;font-size:0.75rem;color:var(--muted);border-top:1px solid var(--border);">
+  WorkerAI Platform · Internal project tracker · Built by Saigates Limited, Wolverhampton<br>
+  Regenerate from <code>docs/work-status/status.md</code> when status changes · Do not edit this HTML by hand
+</footer>
+
+</body>
+</html>
